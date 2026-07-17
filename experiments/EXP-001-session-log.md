@@ -17,7 +17,7 @@
 - Ruta: estándar
 - Nivel de control: medio
 - Componente evaluado: workflow base
-- Estado de la sesión: implementación completada, pendiente de evaluación
+- Estado de la sesión: evaluación completada, pendiente de pull request
 
 ## 3. Objetivo
 
@@ -110,12 +110,12 @@ El responsable aprobó el experimento, corrigió el plan inicial en dos puntos (
 
 ## 13. Evaluación preliminar
 
-Implementación funcional y dentro del alcance. Pendiente de aplicar la rúbrica y emitir decisión final.
+40/50, aprobado
 
 ## 14. Decisión
 
-Pendiente de decisión final por el responsable humano.
+aprobado
 
 ## 15. Próximo paso
 
-Revisión humana de los archivos y de la evidencia de pruebas; aplicación de la rúbrica; decisión sobre creación de pull request.
+crear pull request hacia main
