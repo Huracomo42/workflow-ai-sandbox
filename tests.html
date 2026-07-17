@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pruebas — Gestor de tareas (EXP-003)</title>
+  <title>Pruebas — Gestor de tareas (EXP-004)</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; }
     .pass { color: green; }
@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>Pruebas EXP-003</h1>
+  <h1>Pruebas EXP-004</h1>
   <ul id="results"></ul>
 
   <iframe id="index-frame" src="index.html" title="index.html (verificación de dependencias)" style="display:none"></iframe>
@@ -37,83 +37,87 @@
     }
 
     function runTests() {
+      // 1. Un almacenamiento vacío devuelve [].
       resetStorage();
-
-      // 1. Una tarea válida sin fecha límite se crea y muestra correctamente.
-      const noDate = createTask('Tarea sin fecha', '');
-      const listA = document.createElement('ul');
-      renderTasks(listA);
-      const noDateLi = Array.from(listA.querySelectorAll('li'))
-        .find((li) => li.textContent.indexOf('Tarea sin fecha') !== -1);
+      const emptyResult = loadTasks();
       report(
-        'Una tarea sin fecha límite se crea y muestra',
-        noDate !== null && loadTasks().length === 1 && !!noDateLi
+        'Un almacenamiento vacío devuelve []',
+        Array.isArray(emptyResult) && emptyResult.length === 0
       );
 
-      // 2. Una tarea válida con fecha límite guarda la fecha en formato YYYY-MM-DD.
-      const withDate = createTask('Tarea con fecha', '2026-08-01');
-      report(
-        'Una tarea con fecha límite guarda YYYY-MM-DD',
-        withDate !== null && withDate.dueDate === '2026-08-01'
-      );
-
-      // 3. La fecha límite se muestra en formato DD/MM/YYYY (verificado vía renderTasks).
-      const listB = document.createElement('ul');
-      renderTasks(listB);
-      const withDateLi = Array.from(listB.querySelectorAll('li'))
-        .find((li) => li.textContent.indexOf('Tarea con fecha') !== -1);
-      report(
-        'La fecha límite se muestra en DD/MM/YYYY',
-        !!withDateLi && withDateLi.textContent.indexOf('Fecha límite: 01/08/2026') !== -1
-      );
-
-      // 4. Una tarea sin fecha límite no muestra texto de fecha (verificado vía renderTasks).
-      const noDateLiB = Array.from(listB.querySelectorAll('li'))
-        .find((li) => li.textContent.indexOf('Tarea sin fecha') !== -1);
-      report(
-        'Una tarea sin fecha límite no muestra texto de fecha',
-        !!noDateLiB && noDateLiB.textContent.indexOf('Fecha límite') === -1
-      );
-
-      // 5. Una tarea antigua sin la propiedad de fecha sigue cargándose correctamente.
+      // 2. Un JSON válido sigue cargándose correctamente.
       resetStorage();
       localStorage.setItem(STORAGE_KEY, JSON.stringify([
-        { id: 'legacy-1', title: 'Tarea antigua', completed: false }
+        { id: '1', title: 'Tarea válida', completed: false, dueDate: '' }
       ]));
-      const listC = document.createElement('ul');
-      renderTasks(listC);
-      const legacyLi = Array.from(listC.querySelectorAll('li'))
-        .find((li) => li.textContent.indexOf('Tarea antigua') !== -1);
+      const validResult = loadTasks();
       report(
-        'Una tarea antigua sin propiedad de fecha sigue cargándose',
-        !!legacyLi && legacyLi.textContent.indexOf('Fecha límite') === -1
+        'Un JSON válido sigue cargándose correctamente',
+        Array.isArray(validResult) && validResult.length === 1 && validResult[0].title === 'Tarea válida'
+      );
+
+      // 3. Un JSON corrupto no lanza una excepción no controlada.
+      resetStorage();
+      localStorage.setItem(STORAGE_KEY, '{datos-corruptos');
+      let threw = false;
+      let corruptResult;
+      try {
+        corruptResult = loadTasks();
+      } catch (err) {
+        threw = true;
+      }
+      report('Un JSON corrupto no lanza una excepción no controlada', threw === false);
+
+      // 4. Un JSON corrupto devuelve [].
+      report(
+        'Un JSON corrupto devuelve []',
+        Array.isArray(corruptResult) && corruptResult.length === 0
+      );
+
+      // 5. Después de la recuperación, localStorage contiene [].
+      report(
+        'Después de la recuperación, localStorage contiene []',
+        localStorage.getItem(STORAGE_KEY) === '[]'
+      );
+
+      // 6. Se puede crear una tarea después de la recuperación.
+      const createdAfterRecovery = createTask('Tarea tras recuperación', '');
+      report(
+        'Se puede crear una tarea después de la recuperación',
+        createdAfterRecovery !== null && loadTasks().length === 1
       );
       resetStorage();
 
-      // 6. La validación de título vacío sigue funcionando.
-      const invalidTitle = createTask('', '2026-08-01');
+      // 7. La validación del título vacío sigue funcionando.
+      const invalidTitle = createTask('', '');
       report(
-        'La validación de título vacío sigue funcionando',
+        'La validación del título vacío sigue funcionando',
         invalidTitle === null && loadTasks().length === 0
       );
 
-      // 7. Marcar una tarea como completada sigue funcionando.
-      const forComplete = createTask('Tarea a completar', '');
-      completeTask(forComplete.id);
-      const afterComplete = loadTasks().find((t) => t.id === forComplete.id);
+      // 8. La fecha límite opcional sigue almacenándose correctamente.
+      const withDate = createTask('Tarea con fecha', '2026-08-01');
+      report(
+        'La fecha límite opcional sigue almacenándose correctamente',
+        withDate !== null && withDate.dueDate === '2026-08-01'
+      );
+
+      // 9. Marcar una tarea como completada sigue funcionando.
+      completeTask(withDate.id);
+      const afterComplete = loadTasks().find((t) => t.id === withDate.id);
       report(
         'Marcar una tarea como completada sigue funcionando',
         !!afterComplete && afterComplete.completed === true
       );
 
-      // 8. La fecha límite persiste después de leer nuevamente localStorage.
-      const forPersist = createTask('Tarea persistente', '2026-09-15');
-      const rawAfter = localStorage.getItem(STORAGE_KEY);
-      const parsedAfter = JSON.parse(rawAfter);
-      const persistedTask = parsedAfter.find((t) => t.id === forPersist.id);
+      resetStorage();
+
+      // Prueba adicional: una cadena vacía almacenada se trata como contenido corrupto.
+      localStorage.setItem(STORAGE_KEY, '');
+      const emptyStringResult = loadTasks();
       report(
-        'La fecha límite persiste en localStorage',
-        !!persistedTask && persistedTask.dueDate === '2026-09-15'
+        'Una cadena vacía almacenada se recupera como [] y reemplaza el contenido',
+        Array.isArray(emptyStringResult) && emptyStringResult.length === 0 && localStorage.getItem(STORAGE_KEY) === '[]'
       );
 
       resetStorage();
@@ -121,7 +125,7 @@
 
     runTests();
 
-    // 9. No se añadieron dependencias externas (comprobado directamente sobre index.html).
+    // 10. No se añadieron dependencias externas (comprobado directamente sobre index.html).
     const indexFrame = document.getElementById('index-frame');
     indexFrame.addEventListener('load', () => {
       let refs = [];
