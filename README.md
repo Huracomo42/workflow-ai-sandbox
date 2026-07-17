@@ -14,17 +14,26 @@ Aplicación local mínima de gestión de tareas, construida con HTML, CSS y Java
 5. Las tareas se conservan al recargar la página, mediante `localStorage`.
 6. Un título vacío o compuesto únicamente por espacios no crea una tarea y muestra el mensaje "Escribe un título para la tarea.", que desaparece al crear una tarea válida.
 7. Opcionalmente se puede indicar una fecha límite mediante el selector de fecha. Si se indica, se muestra junto a la tarea como "Fecha límite: DD/MM/YYYY"; si no se indica, la tarea se muestra solo con su título.
+8. Si el contenido almacenado bajo la clave `tasks` no es un JSON válido (por ejemplo, texto corrupto o una cadena vacía), la aplicación no falla: lo trata como una lista vacía, reemplaza el contenido corrupto por `[]` en `localStorage` y permite seguir creando tareas con normalidad.
+
+### Recuperación ante datos corruptos en localStorage
+
+Si la clave `tasks` de `localStorage` contiene un valor que no es un JSON válido, `loadTasks()` captura el error, sobrescribe la clave `tasks` con `[]` y devuelve una lista vacía en lugar de lanzar una excepción. Los datos corruptos se pierden (se reemplazan por una lista vacía), pero la aplicación queda utilizable de inmediato.
+
+**Limitación conocida:** esta recuperación cubre contenido que no es JSON sintácticamente válido (incluida una cadena vacía). No cubre el caso de un JSON válido cuyo resultado no sea un array (por ejemplo, `"{}"` o `"\"texto\""`); ese escenario queda fuera del alcance de esta corrección.
 
 ### Pruebas
 
 Abrir `tests.html` en un navegador. La página ejecuta automáticamente las pruebas y muestra el resultado (PASS/FAIL) de cada caso:
 
-- una tarea sin fecha límite se crea y muestra correctamente;
-- una tarea con fecha límite guarda la fecha en formato `YYYY-MM-DD`;
-- la fecha límite se muestra en formato `DD/MM/YYYY`;
-- una tarea sin fecha límite no muestra texto de fecha;
-- una tarea antigua sin la propiedad de fecha sigue cargándose correctamente;
-- la validación de título vacío sigue funcionando;
+- un almacenamiento vacío devuelve `[]`;
+- un JSON válido sigue cargándose correctamente;
+- un JSON corrupto no lanza una excepción no controlada;
+- un JSON corrupto devuelve `[]`;
+- después de la recuperación, `localStorage` contiene `[]`;
+- se puede crear una tarea después de la recuperación;
+- la validación del título vacío sigue funcionando;
+- la fecha límite opcional sigue almacenándose correctamente;
 - marcar una tarea como completada sigue funcionando;
-- la fecha límite persiste después de leer nuevamente `localStorage`;
-- ausencia de dependencias externas, verificada directamente sobre `index.html`.
+- ausencia de dependencias externas, verificada directamente sobre `index.html`;
+- una cadena vacía almacenada se recupera como `[]` y reemplaza el contenido (prueba adicional).
