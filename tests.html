@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pruebas — Gestor de tareas (EXP-001)</title>
+  <title>Pruebas — Gestor de tareas (EXP-002)</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; }
     .pass { color: green; }
@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>Pruebas EXP-001</h1>
+  <h1>Pruebas EXP-002</h1>
   <ul id="results"></ul>
 
   <script src="app.js"></script>
@@ -31,37 +31,63 @@
     function runTests() {
       resetStorage();
 
-      // 1. Creación de una tarea
+      // 1. Un título válido crea y muestra una tarea.
       const created = createTask('Tarea de prueba');
-      const afterCreate = loadTasks();
-      report(
-        'Creación de una tarea',
-        afterCreate.length === 1 && afterCreate[0].title === 'Tarea de prueba'
-      );
-
-      // 2. Visualización de la tarea creada
       const list = document.createElement('ul');
       renderTasks(list);
-      const rendered = Array.from(list.querySelectorAll('li'))
+      const shown = Array.from(list.querySelectorAll('li'))
         .some((li) => li.textContent.indexOf('Tarea de prueba') !== -1);
-      report('Visualización de la tarea creada', rendered);
+      report(
+        'Un título válido crea y muestra una tarea',
+        created !== null && loadTasks().length === 1 && shown
+      );
 
-      // 3. Marcado como completada
+      // 2. Un título vacío no crea ni guarda una tarea.
+      const invalidEmpty = createTask('');
+      report(
+        'Un título vacío no crea ni guarda una tarea',
+        invalidEmpty === null && loadTasks().length === 1
+      );
+
+      // 3. Un título compuesto únicamente por espacios no crea ni guarda una tarea.
+      const invalidSpaces = createTask('   ');
+      report(
+        'Un título de solo espacios no crea ni guarda una tarea',
+        invalidSpaces === null && loadTasks().length === 1
+      );
+
+      // 4. Se muestra el mensaje de error esperado.
+      const errorEl = document.createElement('p');
+      errorEl.hidden = true;
+      showTitleError(errorEl);
+      report(
+        'Se muestra el mensaje de error esperado',
+        errorEl.hidden === false && errorEl.textContent === TASK_TITLE_ERROR_MESSAGE
+      );
+
+      // 5. Una tarea válida elimina u oculta el mensaje de error.
+      hideTitleError(errorEl);
+      report('Una tarea válida oculta el mensaje de error', errorEl.hidden === true);
+
+      // 6. Marcar una tarea como completada sigue funcionando.
       completeTask(created.id);
       const afterComplete = loadTasks().find((t) => t.id === created.id);
-      report('Marcado como completada', !!afterComplete && afterComplete.completed === true);
+      report(
+        'Marcar una tarea como completada sigue funcionando',
+        !!afterComplete && afterComplete.completed === true
+      );
 
-      // 4. Persistencia mediante localStorage
+      // 7. La persistencia mediante localStorage sigue funcionando.
       const rawAfter = localStorage.getItem(STORAGE_KEY);
       const parsed = JSON.parse(rawAfter);
       const persisted = Array.isArray(parsed) && parsed.length === 1 && parsed[0].completed === true;
-      report('Persistencia mediante localStorage', persisted);
+      report('La persistencia mediante localStorage sigue funcionando', persisted);
 
-      // 5. Ausencia de dependencias externas
+      // 8. No se añadieron dependencias externas.
       const externalRefs = Array.from(document.querySelectorAll('script[src], link[href]'))
         .map((el) => el.getAttribute('src') || el.getAttribute('href'))
         .filter((ref) => /^(https?:)?\/\//i.test(ref));
-      report('Ausencia de dependencias externas', externalRefs.length === 0, externalRefs.join(', '));
+      report('No se añadieron dependencias externas', externalRefs.length === 0, externalRefs.join(', '));
 
       resetStorage();
     }
