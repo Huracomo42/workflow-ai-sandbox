@@ -3,7 +3,17 @@ const TASK_TITLE_ERROR_MESSAGE = 'Escribe un título para la tarea.';
 
 function loadTasks() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : [];
+
+  if (raw === null) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    saveTasks([]);
+    return [];
+  }
 }
 
 function saveTasks(tasks) {
