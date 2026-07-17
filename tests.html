@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pruebas — Gestor de tareas (EXP-001)</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Pruebas EXP-001</h1>
+  <ul id="results"></ul>
+
+  <script src="app.js"></script>
+  <script>
+    const resultsList = document.getElementById('results');
+
+    function report(name, passed, details) {
+      const li = document.createElement('li');
+      li.className = passed ? 'pass' : 'fail';
+      li.textContent = (passed ? 'PASS' : 'FAIL') + ' - ' + name + (details ? ' (' + details + ')' : '');
+      resultsList.appendChild(li);
+    }
+
+    function resetStorage() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    function runTests() {
+      resetStorage();
+
+      // 1. Creación de una tarea
+      const created = createTask('Tarea de prueba');
+      const afterCreate = loadTasks();
+      report(
+        'Creación de una tarea',
+        afterCreate.length === 1 && afterCreate[0].title === 'Tarea de prueba'
+      );
+
+      // 2. Visualización de la tarea creada
+      const list = document.createElement('ul');
+      renderTasks(list);
+      const rendered = Array.from(list.querySelectorAll('li'))
+        .some((li) => li.textContent.indexOf('Tarea de prueba') !== -1);
+      report('Visualización de la tarea creada', rendered);
+
+      // 3. Marcado como completada
+      completeTask(created.id);
+      const afterComplete = loadTasks().find((t) => t.id === created.id);
+      report('Marcado como completada', !!afterComplete && afterComplete.completed === true);
+
+      // 4. Persistencia mediante localStorage
+      const rawAfter = localStorage.getItem(STORAGE_KEY);
+      const parsed = JSON.parse(rawAfter);
+      const persisted = Array.isArray(parsed) && parsed.length === 1 && parsed[0].completed === true;
+      report('Persistencia mediante localStorage', persisted);
+
+      // 5. Ausencia de dependencias externas
+      const externalRefs = Array.from(document.querySelectorAll('script[src], link[href]'))
+        .map((el) => el.getAttribute('src') || el.getAttribute('href'))
+        .filter((ref) => /^(https?:)?\/\//i.test(ref));
+      report('Ausencia de dependencias externas', externalRefs.length === 0, externalRefs.join(', '));
+
+      resetStorage();
+    }
+
+    runTests();
+  </script>
+</body>
+</html>
