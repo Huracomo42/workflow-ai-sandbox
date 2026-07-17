@@ -2,143 +2,38 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pruebas — Gestor de tareas (EXP-004)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pruebas — Gestor de tareas (EXP-005)</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; }
     .pass { color: green; }
     .fail { color: red; }
+    .not-run { color: #6b7280; }
+    .summary { margin: 1rem 0; padding: 0.75rem; border: 1px solid #d1d5db; }
+    .suite-pass { border-left: 4px solid green; }
+    .suite-fail { border-left: 4px solid red; }
   </style>
 </head>
 <body>
-  <h1>Pruebas EXP-004</h1>
-  <ul id="results"></ul>
+  <h1>Pruebas EXP-005</h1>
+  <p>
+    Ejecución mediante HTTP. Modos de control:
+    <code>?mode=assertion-failure</code>,
+    <code>?mode=exception</code> y
+    <code>?mode=skip</code>.
+  </p>
 
-  <iframe id="index-frame" src="index.html" title="index.html (verificación de dependencias)" style="display:none"></iframe>
+  <div id="summary" class="summary" aria-live="polite">Preparando pruebas…</div>
+  <ol id="results"></ol>
+
+  <iframe
+    id="index-frame"
+    src="index.html"
+    title="index.html (verificación de dependencias)"
+    hidden
+  ></iframe>
 
   <script src="app.js"></script>
-  <script>
-    const resultsList = document.getElementById('results');
-
-    function report(name, passed, details) {
-      const li = document.createElement('li');
-      li.className = passed ? 'pass' : 'fail';
-      li.textContent = (passed ? 'PASS' : 'FAIL') + ' - ' + name + (details ? ' (' + details + ')' : '');
-      resultsList.appendChild(li);
-    }
-
-    function resetStorage() {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-
-    function findExternalRefs(doc) {
-      return Array.from(doc.querySelectorAll('script[src], link[href]'))
-        .map((el) => el.getAttribute('src') || el.getAttribute('href'))
-        .filter((ref) => /^(https?:)?\/\//i.test(ref));
-    }
-
-    function runTests() {
-      // 1. Un almacenamiento vacío devuelve [].
-      resetStorage();
-      const emptyResult = loadTasks();
-      report(
-        'Un almacenamiento vacío devuelve []',
-        Array.isArray(emptyResult) && emptyResult.length === 0
-      );
-
-      // 2. Un JSON válido sigue cargándose correctamente.
-      resetStorage();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([
-        { id: '1', title: 'Tarea válida', completed: false, dueDate: '' }
-      ]));
-      const validResult = loadTasks();
-      report(
-        'Un JSON válido sigue cargándose correctamente',
-        Array.isArray(validResult) && validResult.length === 1 && validResult[0].title === 'Tarea válida'
-      );
-
-      // 3. Un JSON corrupto no lanza una excepción no controlada.
-      resetStorage();
-      localStorage.setItem(STORAGE_KEY, '{datos-corruptos');
-      let threw = false;
-      let corruptResult;
-      try {
-        corruptResult = loadTasks();
-      } catch (err) {
-        threw = true;
-      }
-      report('Un JSON corrupto no lanza una excepción no controlada', threw === false);
-
-      // 4. Un JSON corrupto devuelve [].
-      report(
-        'Un JSON corrupto devuelve []',
-        Array.isArray(corruptResult) && corruptResult.length === 0
-      );
-
-      // 5. Después de la recuperación, localStorage contiene [].
-      report(
-        'Después de la recuperación, localStorage contiene []',
-        localStorage.getItem(STORAGE_KEY) === '[]'
-      );
-
-      // 6. Se puede crear una tarea después de la recuperación.
-      const createdAfterRecovery = createTask('Tarea tras recuperación', '');
-      report(
-        'Se puede crear una tarea después de la recuperación',
-        createdAfterRecovery !== null && loadTasks().length === 1
-      );
-      resetStorage();
-
-      // 7. La validación del título vacío sigue funcionando.
-      const invalidTitle = createTask('', '');
-      report(
-        'La validación del título vacío sigue funcionando',
-        invalidTitle === null && loadTasks().length === 0
-      );
-
-      // 8. La fecha límite opcional sigue almacenándose correctamente.
-      const withDate = createTask('Tarea con fecha', '2026-08-01');
-      report(
-        'La fecha límite opcional sigue almacenándose correctamente',
-        withDate !== null && withDate.dueDate === '2026-08-01'
-      );
-
-      // 9. Marcar una tarea como completada sigue funcionando.
-      completeTask(withDate.id);
-      const afterComplete = loadTasks().find((t) => t.id === withDate.id);
-      report(
-        'Marcar una tarea como completada sigue funcionando',
-        !!afterComplete && afterComplete.completed === true
-      );
-
-      resetStorage();
-
-      // Prueba adicional: una cadena vacía almacenada se trata como contenido corrupto.
-      localStorage.setItem(STORAGE_KEY, '');
-      const emptyStringResult = loadTasks();
-      report(
-        'Una cadena vacía almacenada se recupera como [] y reemplaza el contenido',
-        Array.isArray(emptyStringResult) && emptyStringResult.length === 0 && localStorage.getItem(STORAGE_KEY) === '[]'
-      );
-
-      resetStorage();
-    }
-
-    runTests();
-
-    // 10. No se añadieron dependencias externas (comprobado directamente sobre index.html).
-    const indexFrame = document.getElementById('index-frame');
-    indexFrame.addEventListener('load', () => {
-      let refs = [];
-      let limitation = '';
-      try {
-        const frameDoc = indexFrame.contentDocument || indexFrame.contentWindow.document;
-        refs = findExternalRefs(frameDoc);
-      } catch (err) {
-        limitation = 'No se pudo inspeccionar index.html directamente (' + err.message + '); se usó tests.html como respaldo.';
-        refs = findExternalRefs(document);
-      }
-      report('No se añadieron dependencias externas (index.html)', refs.length === 0, limitation || refs.join(', '));
-    });
-  </script>
+  <script src="test-runner.js"></script>
 </body>
 </html>
