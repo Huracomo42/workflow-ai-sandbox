@@ -9,7 +9,7 @@
 - Rama: `experiment/EXP-001-create-minimal-app`
 - Commit inicial: `65cd9d9bc2826539243a7ed4c4acfcd6d73b0b10`
 - Herramienta de ejecución: Claude Code
-- Modelo utilizado: pendiente de registrar
+- Modelo utilizado: Claude Sonnet 5 (claude-sonnet-5)
 
 ## 2. Clasificación
 
@@ -17,7 +17,7 @@
 - Ruta: estándar
 - Nivel de control: medio
 - Componente evaluado: workflow base
-- Estado de la sesión: preparada, no ejecutada
+- Estado de la sesión: implementación completada, pendiente de evaluación
 
 ## 3. Objetivo
 
@@ -96,6 +96,8 @@ Plan corregido y aprobado:
 
 Ninguno. No fue necesario ampliar el alcance ni tomar decisiones técnicas no previstas en el plan aprobado.
 
+Limitación registrada: la prueba automática de ausencia de dependencias externas inspecciona `tests.html`. La ausencia de referencias externas en `index.html` fue confirmada mediante revisión del archivo, no mediante esa prueba automática.
+
 ## 11. Intervención humana
 
 El responsable aprobó el experimento, corrigió el plan inicial en dos puntos (alcance de `tests.html` y método de registro del punto de restauración) y autorizó la implementación con condiciones explícitas de alcance, commits y no integración a `main`.
@@ -108,7 +110,7 @@ El responsable aprobó el experimento, corrigió el plan inicial en dos puntos (
 
 ## 13. Evaluación preliminar
 
-Pendiente de aplicar `docs/evaluation-rubric.md` por el responsable humano.
+Implementación funcional y dentro del alcance. Pendiente de aplicar la rúbrica y emitir decisión final.
 
 ## 14. Decisión
 
