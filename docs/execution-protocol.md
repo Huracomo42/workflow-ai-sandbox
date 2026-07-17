@@ -1,190 +1,168 @@
 # Protocolo de ejecución del piloto
 
-## Objetivo
+## 1. Objetivo
 
-Establecer el procedimiento obligatorio para ejecutar experimentos dentro del sandbox sin saltarse controles, mezclar etapas ni modificar directamente la rama `main`.
+Establecer el procedimiento obligatorio para ejecutar experimentos dentro del sandbox de manera controlada, trazable y reversible.
 
-## 1. Selección de la tarea
+Este protocolo desarrolla operativamente el `PROJECT_CHARTER.md`.
 
-Antes de iniciar:
+Cuando exista una contradicción entre ambos documentos, prevalecerá el Project Charter.
 
-- seleccionar una tarea del banco;
-- confirmar la ruta de trabajo;
-- confirmar el nivel de control;
-- identificar qué capacidad del workflow se evaluará;
-- definir si la tarea pertenece al primer piloto o a un ciclo posterior.
+---
 
-No se podrá ejecutar una tarea que no figure en el banco sin aprobarla previamente.
+## 2. Regla general
 
-## 2. Diseño del experimento
+Ningún experimento podrá ejecutarse sin cumplir estas condiciones:
 
-Crear una copia de `experiment-template.md` y completar como mínimo:
+- tarea seleccionada del banco;
+- ficha de experimento completa;
+- ruta de trabajo definida;
+- nivel de control definido;
+- alcance autorizado;
+- estado inicial registrado;
+- procedimiento de reversión definido;
+- rama exclusiva creada;
+- aprobación humana;
+- registro de sesión iniciado.
 
-- identificación;
-- propósito;
+La ejecución de código antes de cumplir estas condiciones constituye una desviación metodológica.
+
+---
+
+## 3. Selección de la tarea
+
+Antes de iniciar, se deberá:
+
+1. seleccionar una tarea de `docs/task-bank.md`;
+2. confirmar que pertenece al ciclo autorizado;
+3. identificar la capacidad del workflow que se evaluará;
+4. identificar el componente principal evaluado;
+5. evitar evaluar múltiples variables principales simultáneamente;
+6. definir la ruta de trabajo;
+7. definir el nivel de control.
+
+No se podrá ejecutar una tarea no incluida en el banco sin aprobación previa y actualización documental.
+
+---
+
+## 4. Clasificación por ruta
+
+### 4.1 Ruta ligera
+
+Se utilizará para cambios pequeños, localizados y fácilmente reversibles.
+
+Requiere:
+
+- alcance breve;
+- registro de sesión;
+- revisión proporcional;
+- pruebas cuando exista cambio funcional;
+- evidencia suficiente;
+- reversión documentada.
+
+### 4.2 Ruta estándar
+
+Se utilizará para desarrollo funcional, corrección de defectos, refactorización o cambios de varios pasos.
+
+Requiere:
+
+- ficha de experimento;
+- plan previo;
+- rama exclusiva;
+- pruebas;
+- documentación;
+- rúbrica;
+- revisión humana;
+- pull request.
+
+### 4.3 Ruta exploratoria
+
+Se utilizará para investigación, comparación, prototipos y evaluación de alternativas.
+
+Requiere:
+
 - hipótesis;
-- tarea;
-- estado inicial;
-- alcance permitido;
-- alcance no permitido;
-- resultado esperado;
-- criterios de éxito;
-- riesgos;
-- procedimiento de reversión.
+- pregunta de investigación;
+- límite temporal;
+- criterios de comparación;
+- fuentes revisadas;
+- resultado documentado;
+- decisión separada de adopción.
 
-El experimento deberá estar marcado como `aprobado` antes de ejecutar cambios.
+La investigación no autoriza instalación ni incorporación automática.
 
-## 3. Preparación del repositorio
+### 4.4 Ruta de incidente
 
-- confirmar que `main` está estable;
-- registrar el commit inicial;
-- crear una rama exclusiva;
-- verificar que no existen cambios pendientes;
-- completar la sección inicial del checklist;
-- iniciar un registro de sesión.
+Se utilizará ante fallos, regresiones o pérdida de estabilidad.
 
-Formato recomendado para la rama:
+Requiere:
 
-`experiment/EXP-ID-descripcion-breve`
+- contención;
+- registro del estado inicial;
+- diagnóstico;
+- cambio mínimo;
+- verificación posterior;
+- reversión cuando corresponda;
+- informe del incidente.
 
-Ejemplo:
+---
 
-`experiment/EXP-001-create-minimal-app`
+## 5. Clasificación por nivel de control
 
-## 4. Entrega de instrucciones a la IA
+### 5.1 Control bajo
 
-La herramienta recibirá:
+Aplicable a cambios de bajo impacto y reversión sencilla.
 
-- objetivo exacto;
-- contexto necesario;
-- archivos permitidos;
-- restricciones;
-- pruebas requeridas;
-- acciones prohibidas;
-- criterio de finalización.
+Requisitos mínimos:
 
-La instrucción completa deberá copiarse en el registro de sesión.
+- instrucción clara;
+- registro básico;
+- revisión del cambio;
+- evidencia proporcional;
+- ausencia de reglas de bloqueo.
 
-## 5. Revisión obligatoria del plan
+### 5.2 Control medio
 
-Antes de autorizar modificaciones, la IA deberá presentar un plan.
+Aplicable a cambios funcionales o de riesgo moderado.
 
-El responsable humano comprobará:
+Requisitos mínimos:
 
-- que el plan responde al objetivo;
-- que no amplía el alcance;
-- que incluye pruebas;
-- que contempla documentación;
-- que identifica riesgos;
-- que mantiene una vía de reversión.
+- ficha de experimento;
+- rama exclusiva;
+- plan revisado;
+- pruebas;
+- documentación;
+- registro de sesión;
+- rúbrica;
+- reversión documentada;
+- aprobación humana antes de integrar.
 
-Si el plan no cumple estos puntos, deberá corregirse antes de continuar.
+### 5.3 Control alto
 
-## 6. Ejecución
+Aplicable a cambios de impacto amplio, dependencias, arquitectura, seguridad o reversión compleja.
 
-Durante la ejecución:
+Requisitos mínimos:
 
-- trabajar únicamente en la rama del experimento;
-- registrar acciones relevantes;
-- no añadir dependencias no aprobadas;
-- no utilizar credenciales reales;
-- no modificar archivos fuera del alcance;
-- detenerse ante una condición no prevista;
-- solicitar autorización para ampliar el alcance.
+- aprobación humana explícita;
+- análisis de riesgos;
+- plan detallado;
+- pruebas reforzadas;
+- revisión técnica independiente;
+- reversión validada;
+- trazabilidad completa;
+- pull request obligatorio.
 
-La IA no podrá considerar completada la tarea solo porque el código haya sido generado.
+### 5.4 Control crítico o regulado
 
-## 7. Verificación
+No está autorizado durante el primer piloto.
 
-Al finalizar los cambios:
+---
 
-- revisar los archivos modificados;
-- ejecutar las pruebas definidas;
-- realizar verificaciones manuales cuando corresponda;
-- comprobar que no existen cambios accidentales;
-- actualizar la documentación necesaria;
-- conservar logs y evidencias;
-- completar el checklist.
+## 6. Diseño del experimento
 
-Sin pruebas ejecutadas no existe resultado aprobado.
+Crear una copia de `docs/experiment-template.md`.
 
-## 8. Evaluación
+El archivo deberá almacenarse en:
 
-Aplicar `evaluation-rubric.md`.
-
-Registrar:
-
-- puntuación por criterio;
-- evidencia que justifica cada puntuación;
-- puntuación total;
-- reglas de bloqueo;
-- decisión preliminar.
-
-Las reglas de bloqueo prevalecen sobre la puntuación total.
-
-## 9. Reversión
-
-La reversión deberá ejecutarse cuando:
-
-- exista una acción destructiva;
-- aparezcan cambios fuera del alcance;
-- fallen pruebas críticas;
-- se pierda trazabilidad;
-- el cambio no pueda validarse;
-- se active una regla de bloqueo;
-- el experimento exija probar explícitamente la reversión.
-
-Después de revertir:
-
-- verificar el estado de los archivos;
-- iniciar la aplicación;
-- ejecutar nuevamente las pruebas iniciales;
-- registrar la evidencia.
-
-## 10. Decisión
-
-El experimento concluirá con una de estas decisiones:
-
-- aprobado;
-- aprobado con correcciones;
-- repetir;
-- rechazado.
-
-Además, el componente evaluado recibirá una decisión:
-
-- incorporar;
-- incorporar con restricciones;
-- experimentar nuevamente;
-- posponer;
-- rechazar.
-
-Toda decisión deberá estar sustentada en evidencia, no en impresión personal.
-
-## 11. Integración a `main`
-
-Solo podrá integrarse un cambio cuando:
-
-- el experimento esté aprobado;
-- las pruebas hayan sido superadas;
-- la documentación esté actualizada;
-- no exista una regla de bloqueo;
-- la revisión técnica haya concluido;
-- el responsable humano autorice la integración.
-
-La integración deberá realizarse mediante pull request. No se harán cambios funcionales directamente en `main`.
-
-## 12. Cierre
-
-Antes de cerrar:
-
-- completar el registro de sesión;
-- completar la ficha del experimento;
-- guardar el resultado de la rúbrica;
-- registrar commits y pull request;
-- actualizar el tablero de resultados;
-- definir el próximo paso;
-- conservar o eliminar la rama según la decisión.
-
-## Regla metodológica
-
-No se podrá pasar a instalación o ejecución práctica mientras falte algún instrumento obligatorio del paquete operativo.
+```text
+experiments/EXP-ID-descripcion-breve.md
