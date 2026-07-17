@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'tasks';
+const TASK_TITLE_ERROR_MESSAGE = 'Escribe un título para la tarea.';
 
 function loadTasks() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -9,12 +10,30 @@ function saveTasks(tasks) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
+function isValidTitle(title) {
+  return typeof title === 'string' && title.trim().length > 0;
+}
+
 function createTask(title) {
+  if (!isValidTitle(title)) {
+    return null;
+  }
   const tasks = loadTasks();
   const task = { id: Date.now().toString(), title: title, completed: false };
   tasks.push(task);
   saveTasks(tasks);
   return task;
+}
+
+function showTitleError(el) {
+  if (!el) return;
+  el.textContent = TASK_TITLE_ERROR_MESSAGE;
+  el.hidden = false;
+}
+
+function hideTitleError(el) {
+  if (!el) return;
+  el.hidden = true;
 }
 
 function completeTask(id) {
@@ -54,12 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('task-form');
   const input = document.getElementById('task-title');
   const list = document.getElementById('task-list');
+  const errorMessage = document.getElementById('task-error');
 
   if (form && input && list) {
     renderTasks(list);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      createTask(input.value);
+      const created = createTask(input.value);
+      if (!created) {
+        showTitleError(errorMessage);
+        return;
+      }
+      hideTitleError(errorMessage);
       input.value = '';
       renderTasks(list);
     });

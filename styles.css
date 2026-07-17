@@ -24,6 +24,11 @@ button {
   padding: 0.4rem 0.8rem;
 }
 
+.error-message {
+  color: #b00020;
+  margin: 0 0 1rem;
+}
+
 ul#task-list {
   list-style: none;
   padding: 0;
