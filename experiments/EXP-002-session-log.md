@@ -17,7 +17,7 @@
 - Ruta: ligera
 - Nivel de control: medio
 - Componente evaluado: workflow base
-- Estado de la sesión: evaluación completada, pendiente de pull request
+- Estado de la sesión: pull request creado, pendiente de revisión final
 
 ## 3. Objetivo
 
@@ -93,7 +93,7 @@ Plan corregido y aprobado:
   - PASS - No se añadieron dependencias externas
 - `index.html` verificado en modo headless: el elemento `#task-error` se renderiza oculto (`hidden=""`) por defecto, junto con `#task-form` y `#task-list`.
 - Verificación de alcance: `git status` confirma que solo se modificaron los archivos autorizados; no se crearon ni modificaron `PROJECT_CHARTER.md` ni archivos de `docs/`; no se añadieron dependencias.
-- Pull request: todavía no creado
+- Pull request: https://github.com/Huracomo42/workflow-ai-sandbox/pull/2
 
 ## 10. Problemas encontrados
 
@@ -121,4 +121,4 @@ aprobado
 
 ## 15. Próximo paso
 
-crear pull request hacia main
+Revisión final del pull request y decisión de merge hacia main.
