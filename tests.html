@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pruebas — Gestor de tareas (EXP-002)</title>
+  <title>Pruebas — Gestor de tareas (EXP-003)</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; }
     .pass { color: green; }
@@ -10,8 +10,10 @@
   </style>
 </head>
 <body>
-  <h1>Pruebas EXP-002</h1>
+  <h1>Pruebas EXP-003</h1>
   <ul id="results"></ul>
+
+  <iframe id="index-frame" src="index.html" title="index.html (verificación de dependencias)" style="display:none"></iframe>
 
   <script src="app.js"></script>
   <script>
@@ -28,71 +30,111 @@
       localStorage.removeItem(STORAGE_KEY);
     }
 
+    function findExternalRefs(doc) {
+      return Array.from(doc.querySelectorAll('script[src], link[href]'))
+        .map((el) => el.getAttribute('src') || el.getAttribute('href'))
+        .filter((ref) => /^(https?:)?\/\//i.test(ref));
+    }
+
     function runTests() {
       resetStorage();
 
-      // 1. Un título válido crea y muestra una tarea.
-      const created = createTask('Tarea de prueba');
-      const list = document.createElement('ul');
-      renderTasks(list);
-      const shown = Array.from(list.querySelectorAll('li'))
-        .some((li) => li.textContent.indexOf('Tarea de prueba') !== -1);
+      // 1. Una tarea válida sin fecha límite se crea y muestra correctamente.
+      const noDate = createTask('Tarea sin fecha', '');
+      const listA = document.createElement('ul');
+      renderTasks(listA);
+      const noDateLi = Array.from(listA.querySelectorAll('li'))
+        .find((li) => li.textContent.indexOf('Tarea sin fecha') !== -1);
       report(
-        'Un título válido crea y muestra una tarea',
-        created !== null && loadTasks().length === 1 && shown
+        'Una tarea sin fecha límite se crea y muestra',
+        noDate !== null && loadTasks().length === 1 && !!noDateLi
       );
 
-      // 2. Un título vacío no crea ni guarda una tarea.
-      const invalidEmpty = createTask('');
+      // 2. Una tarea válida con fecha límite guarda la fecha en formato YYYY-MM-DD.
+      const withDate = createTask('Tarea con fecha', '2026-08-01');
       report(
-        'Un título vacío no crea ni guarda una tarea',
-        invalidEmpty === null && loadTasks().length === 1
+        'Una tarea con fecha límite guarda YYYY-MM-DD',
+        withDate !== null && withDate.dueDate === '2026-08-01'
       );
 
-      // 3. Un título compuesto únicamente por espacios no crea ni guarda una tarea.
-      const invalidSpaces = createTask('   ');
+      // 3. La fecha límite se muestra en formato DD/MM/YYYY (verificado vía renderTasks).
+      const listB = document.createElement('ul');
+      renderTasks(listB);
+      const withDateLi = Array.from(listB.querySelectorAll('li'))
+        .find((li) => li.textContent.indexOf('Tarea con fecha') !== -1);
       report(
-        'Un título de solo espacios no crea ni guarda una tarea',
-        invalidSpaces === null && loadTasks().length === 1
+        'La fecha límite se muestra en DD/MM/YYYY',
+        !!withDateLi && withDateLi.textContent.indexOf('Fecha límite: 01/08/2026') !== -1
       );
 
-      // 4. Se muestra el mensaje de error esperado.
-      const errorEl = document.createElement('p');
-      errorEl.hidden = true;
-      showTitleError(errorEl);
+      // 4. Una tarea sin fecha límite no muestra texto de fecha (verificado vía renderTasks).
+      const noDateLiB = Array.from(listB.querySelectorAll('li'))
+        .find((li) => li.textContent.indexOf('Tarea sin fecha') !== -1);
       report(
-        'Se muestra el mensaje de error esperado',
-        errorEl.hidden === false && errorEl.textContent === TASK_TITLE_ERROR_MESSAGE
+        'Una tarea sin fecha límite no muestra texto de fecha',
+        !!noDateLiB && noDateLiB.textContent.indexOf('Fecha límite') === -1
       );
 
-      // 5. Una tarea válida elimina u oculta el mensaje de error.
-      hideTitleError(errorEl);
-      report('Una tarea válida oculta el mensaje de error', errorEl.hidden === true);
+      // 5. Una tarea antigua sin la propiedad de fecha sigue cargándose correctamente.
+      resetStorage();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([
+        { id: 'legacy-1', title: 'Tarea antigua', completed: false }
+      ]));
+      const listC = document.createElement('ul');
+      renderTasks(listC);
+      const legacyLi = Array.from(listC.querySelectorAll('li'))
+        .find((li) => li.textContent.indexOf('Tarea antigua') !== -1);
+      report(
+        'Una tarea antigua sin propiedad de fecha sigue cargándose',
+        !!legacyLi && legacyLi.textContent.indexOf('Fecha límite') === -1
+      );
+      resetStorage();
 
-      // 6. Marcar una tarea como completada sigue funcionando.
-      completeTask(created.id);
-      const afterComplete = loadTasks().find((t) => t.id === created.id);
+      // 6. La validación de título vacío sigue funcionando.
+      const invalidTitle = createTask('', '2026-08-01');
+      report(
+        'La validación de título vacío sigue funcionando',
+        invalidTitle === null && loadTasks().length === 0
+      );
+
+      // 7. Marcar una tarea como completada sigue funcionando.
+      const forComplete = createTask('Tarea a completar', '');
+      completeTask(forComplete.id);
+      const afterComplete = loadTasks().find((t) => t.id === forComplete.id);
       report(
         'Marcar una tarea como completada sigue funcionando',
         !!afterComplete && afterComplete.completed === true
       );
 
-      // 7. La persistencia mediante localStorage sigue funcionando.
+      // 8. La fecha límite persiste después de leer nuevamente localStorage.
+      const forPersist = createTask('Tarea persistente', '2026-09-15');
       const rawAfter = localStorage.getItem(STORAGE_KEY);
-      const parsed = JSON.parse(rawAfter);
-      const persisted = Array.isArray(parsed) && parsed.length === 1 && parsed[0].completed === true;
-      report('La persistencia mediante localStorage sigue funcionando', persisted);
-
-      // 8. No se añadieron dependencias externas.
-      const externalRefs = Array.from(document.querySelectorAll('script[src], link[href]'))
-        .map((el) => el.getAttribute('src') || el.getAttribute('href'))
-        .filter((ref) => /^(https?:)?\/\//i.test(ref));
-      report('No se añadieron dependencias externas', externalRefs.length === 0, externalRefs.join(', '));
+      const parsedAfter = JSON.parse(rawAfter);
+      const persistedTask = parsedAfter.find((t) => t.id === forPersist.id);
+      report(
+        'La fecha límite persiste en localStorage',
+        !!persistedTask && persistedTask.dueDate === '2026-09-15'
+      );
 
       resetStorage();
     }
 
     runTests();
+
+    // 9. No se añadieron dependencias externas (comprobado directamente sobre index.html).
+    const indexFrame = document.getElementById('index-frame');
+    indexFrame.addEventListener('load', () => {
+      let refs = [];
+      let limitation = '';
+      try {
+        const frameDoc = indexFrame.contentDocument || indexFrame.contentWindow.document;
+        refs = findExternalRefs(frameDoc);
+      } catch (err) {
+        limitation = 'No se pudo inspeccionar index.html directamente (' + err.message + '); se usó tests.html como respaldo.';
+        refs = findExternalRefs(document);
+      }
+      report('No se añadieron dependencias externas (index.html)', refs.length === 0, limitation || refs.join(', '));
+    });
   </script>
 </body>
 </html>

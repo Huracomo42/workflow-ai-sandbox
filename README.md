@@ -13,16 +13,18 @@ Aplicación local mínima de gestión de tareas, construida con HTML, CSS y Java
 4. Pulsar "Completar" en una tarea para marcarla como completada.
 5. Las tareas se conservan al recargar la página, mediante `localStorage`.
 6. Un título vacío o compuesto únicamente por espacios no crea una tarea y muestra el mensaje "Escribe un título para la tarea.", que desaparece al crear una tarea válida.
+7. Opcionalmente se puede indicar una fecha límite mediante el selector de fecha. Si se indica, se muestra junto a la tarea como "Fecha límite: DD/MM/YYYY"; si no se indica, la tarea se muestra solo con su título.
 
 ### Pruebas
 
 Abrir `tests.html` en un navegador. La página ejecuta automáticamente las pruebas y muestra el resultado (PASS/FAIL) de cada caso:
 
-- un título válido crea y muestra una tarea;
-- un título vacío no crea ni guarda una tarea;
-- un título de solo espacios no crea ni guarda una tarea;
-- se muestra el mensaje de error esperado;
-- una tarea válida oculta el mensaje de error;
+- una tarea sin fecha límite se crea y muestra correctamente;
+- una tarea con fecha límite guarda la fecha en formato `YYYY-MM-DD`;
+- la fecha límite se muestra en formato `DD/MM/YYYY`;
+- una tarea sin fecha límite no muestra texto de fecha;
+- una tarea antigua sin la propiedad de fecha sigue cargándose correctamente;
+- la validación de título vacío sigue funcionando;
 - marcar una tarea como completada sigue funcionando;
-- la persistencia mediante `localStorage` sigue funcionando;
-- ausencia de dependencias externas.
+- la fecha límite persiste después de leer nuevamente `localStorage`;
+- ausencia de dependencias externas, verificada directamente sobre `index.html`.
