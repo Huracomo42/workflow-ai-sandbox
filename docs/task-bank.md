@@ -182,6 +182,27 @@ Definir tareas controladas y repetibles para validar el workflow profesional de 
   * detección de riesgos;
   * priorización de hallazgos.
 
+## TB-13 — Edición de tareas existentes con revisión separada
+
+* Ruta: estándar
+* Nivel de control: alto
+* Objetivo: permitir editar el título y la fecha límite de una tarea existente mediante una interfaz inline, manteniendo un borrador temporal en memoria que no modifique `localStorage` hasta confirmar el guardado.
+* Resultado esperado: el usuario puede modificar el título y la fecha límite de cualquier tarea, completada o pendiente, sin perder datos si cancela y sin incorporar dependencias externas nuevas.
+* Capacidades evaluadas:
+
+  * diseño de un estado temporal de edición sin persistencia prematura;
+  * control estricto del alcance de los campos editables;
+  * validación con rechazo atómico del guardado ante datos inválidos;
+  * separación real entre el contexto de implementación y el contexto de revisión técnica;
+  * disciplina de pruebas de regresión sobre la suite existente;
+  * aplicación de un nivel de control alto (revisión independiente, evidencia reforzada, reversión ensayada).
+* Restricciones:
+
+  * no modificar el sistema de identificación de tareas;
+  * no incorporar dependencias ni frameworks;
+  * no permitir edición simultánea de más de una tarea;
+  * no eliminar tareas ni añadir campos nuevos al modelo.
+
 ## Orden recomendado del primer piloto
 
 1. TB-01 — Creación inicial.
