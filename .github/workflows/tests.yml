@@ -57,7 +57,7 @@ jobs:
           cat test-results.html
 
           grep -q 'data-test-status="pass"' test-results.html
-          grep -q 'data-test-general-status="PASS CON NO EJECUTADOS"' test-results.html
+          grep -q 'data-test-general-status="PASS"' test-results.html
           grep -q 'T005-FINAL' test-results.html
 
       - name: Mostrar registro del servidor si falla
