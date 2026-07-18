@@ -1,0 +1,72 @@
+﻿name: Browser tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Iniciar servidor HTTP
+        run: |
+          python -m http.server 8000 > server.log 2>&1 &
+          echo $! > server.pid
+
+      - name: Esperar al servidor
+        run: |
+          for attempt in {1..20}; do
+            if curl --fail --silent http://localhost:8000/tests.html > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "El servidor HTTP no respondió."
+          cat server.log
+          exit 1
+
+      - name: Ejecutar pruebas en navegador
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+
+          if [ -z "$CHROME" ]; then
+            echo "No se encontró un navegador Chromium."
+            exit 1
+          fi
+
+          "$CHROME" \
+            --headless \
+            --no-sandbox \
+            --disable-gpu \
+            --virtual-time-budget=5000 \
+            --dump-dom \
+            http://localhost:8000/tests.html \
+            > test-results.html
+
+          cat test-results.html
+
+          grep -q 'data-test-status="pass"' test-results.html
+          grep -q 'data-test-general-status="PASS CON NO EJECUTADOS"' test-results.html
+          grep -q 'T005-FINAL' test-results.html
+
+      - name: Mostrar registro del servidor si falla
+        if: failure()
+        run: cat server.log || true
+
+      - name: Detener servidor
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill "$(cat server.pid)" || true
+          fi
