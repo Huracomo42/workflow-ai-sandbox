@@ -139,3 +139,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: evitar ambigüedad y preservar accesibilidad básica.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 11 — Conservación del orden
+
+- Fecha: 19 de julio de 2026
+- Decisión: cambiar la prioridad de una tarea no modificará su posición en la lista.
+- Restricción: la prioridad no producirá ordenamiento automático.
+- Motivo: mantener separado el concepto de prioridad del orden de visualización y respetar el alcance aprobado.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
