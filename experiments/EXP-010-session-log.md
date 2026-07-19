@@ -303,3 +303,75 @@ Confirmado:
 ## Excepciones (Gate 2)
 
 Ninguna registrada. El hallazgo de §18 se documenta como defecto corregido del arnés de pruebas, no como excepción al alcance autorizado.
+
+---
+
+## 24. Gate 3 — Revisión técnica independiente (cuarta entrega)
+
+- Fecha: 19 de julio de 2026.
+- Instrucción recibida: "Inicia ahora la revisión independiente de EXP-010. No modifiques código ni archivos durante la revisión."
+- Un primer informe (commit `42ff4d3`) se redactó en el mismo contexto que la implementación y registró un hallazgo bloqueante (F1) por incumplir el requisito de separación de contexto de `experiments/EXP-010-TB-14.md` §12.
+- Ese informe fue reemplazado por una revisión formal realizada en un contexto separado, registrada en `experiments/EXP-010-independent-review.md`, con **veredicto APROBADO, sin hallazgos bloqueantes** (10 hallazgos H1-H10, todos no bloqueantes u observaciones).
+- Instrucción recibida a continuación: "La revisión independiente formal aprobó Gate 3 sin hallazgos bloqueantes."
+
+## 25. Ajuste previo a reversión (quinta entrega): cierre de H1, H3, H4, H5 y H6
+
+- Fecha: 19 de julio de 2026.
+- Instrucción recibida: autorización limitada a corregir H1, H3 y H4 (documentales), añadir T010-15 y T010-16 (cierre de H5 y H6), sin modificar comportamiento productivo salvo defecto real revelado por esas pruebas, sin implementar alcance diferido, reejecutar la suite completa y actualizar únicamente este registro y `EXP-010-independent-review.md` (solo para registrar el cierre, sin reescribir el veredicto formal).
+
+### Cierre de H1 — estados obsoletos
+
+Actualizados `experiments/EXP-010-TB-14.md` (encabezado, tabla de gates §12, alcance vigente §13, estado actual §14, lista de archivos §11), `experiments/EXP-010-test-plan.md` (encabezado) y `experiments/EXP-010-implementation-plan.md` (encabezado, sección "Archivos autorizados", sección "Aprobación humana antes de implementar") para reflejar: Gate 0 completado, Gate 1 (fase roja) completado, Gate 2 (implementación) completado, Gate 3 (revisión independiente) aprobado sin hallazgos bloqueantes; Gates 4-6 pendientes.
+
+### Cierre de H3 — cita incorrecta de RF-05
+
+En `experiments/EXP-010-TB-14.md` §8 (decisión 6) y §9 (tabla de pruebas, filas T010-10 y T010-11), se eliminó la cita a RF-05 (que describe el filtro de prioridad, trazado a VS-04 en `experiments/EXP-009-traceability-matrix.md`, no a VS-01) y se sustituyó por CA-VS01-08 (criterio de aceptación de la propia slice, que sí describe el selector de creación) y RI-02 (conjunto de valores válidos), conforme a la recomendación del hallazgo H3.
+
+### Cierre de H4 — mapeo T010 desalineado en la matriz de EXP-009
+
+En `experiments/EXP-009-traceability-matrix.md` §1, la fila de RF-04 citaba `T010-11` (que tras la renumeración de Gate 1 es "Media aparece seleccionada inicialmente"); se corrigió a `T010-12` (el caso que efectivamente prueba "texto visible en fila renderizada"). Fue el único identificador `T010-1x` desalineado en ese archivo (verificado mediante búsqueda exhaustiva de `T010-1[0-4]`). No se modificó ningún requisito, decisión ni alcance de EXP-009.
+
+### Cierre de H5 y H6 — pruebas nuevas T010-15 y T010-16
+
+Incorporadas en `test-runner.js`, entre `T010-14` y `T005-CONTROL-ASSERT`:
+
+- **T010-15** — ejerce el envío real del formulario de creación dentro del iframe de `index.html` (no simulado): localiza `#task-form`, `#task-title` y el selector de prioridad mediante `findPrioritySelect()`; fija un título único y `priority = 'high'`; despacha un evento `submit` real sobre el formulario; verifica que la tarea creada quedó persistida con `priority: "high"` y que el `<select>` volvió a mostrar `medium` seleccionado. Cierra H5.
+- **T010-16** — crea una tarea con `priority: 'high'`; la edita (título y fecha) mediante `beginEditTask`/`saveEditTask`; verifica que `priority` sigue siendo `'high'` tanto en el valor devuelto como en `localStorage`; completa la tarea (`completeTask`) y verifica que `priority` sigue siendo `'high'`. Cierra H6.
+
+Ambas pruebas ejecutan sobre código productivo sin modificar: no se tocó `app.js`, `index.html` ni `styles.css` en esta entrega. Ninguna reveló un defecto real, por lo que no se aplicó ningún cambio de comportamiento productivo (condición 5 de la instrucción).
+
+## 26. Ejecución (reconfirmación tras el ajuste)
+
+- Servidor: `python -m http.server 8012`, servido desde la raíz del repositorio.
+- Navegador: Microsoft Edge headless, versión 150.0.4078.83.
+- Comando: `msedge --headless --disable-gpu --virtual-time-budget=8000 --dump-dom http://localhost:8012/tests.html`, modo `normal`.
+- Totales: **39 casos — 37 PASS, 0 FAIL, 2 NO EJECUTADO.**
+- `T010-15` y `T010-16`: ambas en **PASS**.
+- T010-01 a T010-14: las 14 en PASS (sin cambios respecto de Gate 2).
+- Regresión `T005-*`/`T007-*`/`T005-FINAL`: 20/20 en PASS.
+- NO EJECUTADO: únicamente `T005-CONTROL-ASSERT` y `T005-CONTROL-EXCEPTION` (controles deliberados, modo `normal`).
+- Ejecución repetida una segunda vez para confirmar ausencia de intermitencia (en particular de `T010-15`, que despacha un evento DOM real): mismo resultado.
+
+## 27. Control del alcance de esta entrega
+
+Confirmado:
+
+- se modificaron únicamente `experiments/EXP-010-TB-14.md`, `experiments/EXP-010-test-plan.md`, `experiments/EXP-010-implementation-plan.md` (cierre de H1 y H3), `experiments/EXP-009-traceability-matrix.md` (cierre de H4, un solo identificador), `test-runner.js` (T010-15 y T010-16) y este registro;
+- no se modificó `app.js`, `index.html` ni `styles.css`;
+- no se modificó `tests.html`;
+- no se implementó edición de prioridad, filtros, transición reversible de estado, ordenamiento ni ningún otro elemento de alcance diferido;
+- no se añadieron dependencias externas;
+- no se alteraron requisitos, decisiones ni alcance de EXP-008/EXP-009 (solo se corrigieron citas/identificadores de trazabilidad, H3 y H4);
+- no se creó commit.
+
+## 28. Estado de salida tras el ajuste previo a reversión
+
+- H1, H3, H4, H5 y H6: cerrados.
+- H2, H7, H8, H9, H10: sin cambios (H2 pendiente de aceptación explícita como excepción o de re-secuenciación de commits; H7-H10 son observaciones que no requerían corrección en esta entrega).
+- Gate 3: se mantiene aprobado; esta entrega no reabre ni reescribe ese veredicto.
+- Siguiente paso: ensayo de reversión (Gate 5) y/o evaluación de rúbrica (Gate 4), cada uno sujeto a autorización separada.
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (ajuste previo a reversión)
+
+Ninguna registrada.

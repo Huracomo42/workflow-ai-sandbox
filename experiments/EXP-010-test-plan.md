@@ -1,7 +1,7 @@
 # EXP-010 — Plan de pruebas
 
 - Fecha real de elaboración: 19 de julio de 2026
-- Estado: congelado; pruebas no ejecutadas (implementación no autorizada todavía)
+- Estado: ejecutado. Fase roja (Gate 1) y fase verde (Gate 2) completadas; T010-01 a T010-14 en PASS tras la implementación de VS-01; regresión `T005-*`/`T007-*` en PASS. Revisión técnica independiente (Gate 3) aprobada sin hallazgos bloqueantes. Detalle completo en `experiments/EXP-010-session-log.md`.
 
 ## Línea base
 

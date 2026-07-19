@@ -715,6 +715,77 @@
       }
     },
     {
+      id: 'T010-15',
+      name: 'Tras crear con prioridad distinta de Media mediante el formulario, el selector vuelve a Media',
+      ...storageIsolation,
+      async run() {
+        await waitForFrame(indexFrame);
+        const frameDocument = indexFrame.contentDocument || indexFrame.contentWindow.document;
+        const form = frameDocument.getElementById('task-form');
+        const titleInput = frameDocument.getElementById('task-title');
+        const prioritySelect = findPrioritySelect();
+        assert(
+          Boolean(form) && Boolean(titleInput) && Boolean(prioritySelect),
+          'No se encontraron los controles del formulario de creación en index.html.'
+        );
+
+        const uniqueTitle = 'Tarea T010-15 ' + Date.now();
+        titleInput.value = uniqueTitle;
+        titleInput.dispatchEvent(new Event('input'));
+        prioritySelect.value = 'high';
+        prioritySelect.dispatchEvent(new Event('change'));
+
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+        const created = loadTasks().find((task) => task.title === uniqueTitle);
+        assert(
+          Boolean(created) && created.priority === 'high',
+          'La tarea no se creó con la prioridad Alta seleccionada en el formulario.'
+        );
+
+        const selectedOption = prioritySelect.options[prioritySelect.selectedIndex];
+        assert(
+          Boolean(selectedOption) && selectedOption.value === 'medium',
+          'El selector de prioridad no volvió a Media tras crear la tarea.'
+        );
+      }
+    },
+    {
+      id: 'T010-16',
+      name: 'Editar título/fecha y completar una tarea conserva exactamente su priority',
+      ...editIsolation,
+      run() {
+        const created = createTask('Tarea de prioridad alta', '2026-08-01', 'high');
+        assert(
+          created !== null && created.priority === 'high',
+          'No se pudo crear la tarea previa con prioridad high.'
+        );
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        assert(Boolean(draft), 'No se activó el borrador de edición.');
+        draft.title = 'Tarea de prioridad alta (editada)';
+        draft.dueDate = '2026-09-01';
+
+        const savedEdit = saveEditTask();
+        assert(savedEdit !== null, 'No se pudo guardar la edición.');
+        assert(savedEdit.priority === 'high', 'La prioridad cambió al editar título/fecha.');
+
+        const afterEdit = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(afterEdit) && afterEdit.priority === 'high',
+          'La prioridad persistida cambió tras editar título/fecha.'
+        );
+
+        completeTask(created.id);
+        const afterComplete = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(afterComplete) && afterComplete.completed === true && afterComplete.priority === 'high',
+          'La prioridad cambió al completar la tarea.'
+        );
+      }
+    },
+    {
       id: 'T005-CONTROL-ASSERT',
       name: 'Fallo de aserción controlado no detiene la suite',
       skipWhen: () => mode !== 'assertion-failure',

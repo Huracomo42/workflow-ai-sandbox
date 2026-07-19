@@ -1,7 +1,7 @@
 # EXP-010 — Plan de implementación
 
 - Fecha real de elaboración: 19 de julio de 2026
-- Estado: congelado; implementación no autorizada todavía (pendiente de Gate 1, ver `experiments/EXP-010-TB-14.md` §12)
+- Estado: ejecutado. Gate 1 (fase roja) y Gate 2 (implementación) completados conforme a este plan; Gate 3 (revisión técnica independiente) aprobado sin hallazgos bloqueantes. Ver `experiments/EXP-010-TB-14.md` §12 y `experiments/EXP-010-session-log.md` para el detalle.
 
 ## Slice aprobada
 
@@ -32,7 +32,7 @@ Esta secuencia roja→verde es evidencia obligatoria de control alto y no puede 
 
 ## Archivos autorizados
 
-Para la fase de implementación (aún no autorizada mediante Gate 1):
+Para la fase de implementación (autorizada y ejecutada mediante Gate 1 y Gate 2):
 
 - `app.js`
 - `index.html`
@@ -141,5 +141,4 @@ Idénticos a `experiments/EXP-010-TB-14.md` §7:
 
 ## Aprobación humana antes de implementar
 
-- Este plan queda congelado y listo para su revisión, pero **la implementación no está autorizada en esta entrega**.
-- La ejecución de los cambios descritos en este plan requiere una autorización explícita separada del responsable humano (Gate 1, `experiments/EXP-010-TB-14.md` §12), distinta de la autorización de la preparación documental (Gate 0, cubierta por el gate de entrada P3-4 ya autorizado) que habilitó la elaboración de este mismo plan.
+- Gate 1 (fase roja) y Gate 2 (implementación) fueron autorizados explícitamente por Hugo Cornejo Villena, en instrucciones separadas de la autorización de la preparación documental (Gate 0, cubierta por el gate de entrada P3-4 ya autorizado). Ambos gates se completaron conforme a este plan; ver `experiments/EXP-010-TB-14.md` §12 y `experiments/EXP-010-session-log.md` para el detalle y la evidencia de ejecución.
