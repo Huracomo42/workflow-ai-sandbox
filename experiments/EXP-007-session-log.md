@@ -117,10 +117,28 @@ No se observaron errores de consola de la aplicación en el log de Edge (solo un
 - Experimentos anteriores: no modificados.
 - Pruebas existentes (T005-*): no reducidas ni eliminadas; las 10 pruebas más el caso final y los controles se mantienen íntegros.
 
+### Excepción de trazabilidad registrada (H2 — aceptada como excepción operativa)
+
+- Regla omitida: separación de commits por tarea/gate (`docs/execution-protocol.md` §14, "evitar mezclar tareas"; `docs/WORKFLOW-METHODOLOGY-v2.md`, principio 6 y §13).
+- Hecho constatado por la revisión independiente: Gate 0 (documentación — `docs/task-bank.md`, `experiments/EXP-007-TB-13.md`) y Gate 2 (implementación de código y pruebas) quedaron registrados en un único commit (`06adeb7 — feat: add task editing workflow`), en lugar de en commits separados por gate.
+- Motivo: decisión operativa del piloto para esta sesión, no un incumplimiento no advertido.
+- Riesgo: reduce la granularidad de la trazabilidad commit a commit entre la aprobación documental (Gate 0) y la implementación (Gate 2); dificulta revertir un gate sin afectar al otro mediante un único commit.
+- Medida compensatoria: la secuencia real de ejecución (Gate 0 completado y aprobado antes de iniciar Gate 2) quedó documentada explícitamente en este registro de sesión (secciones 4, 6 y 7), permitiendo reconstruir el orden real aunque no esté reflejado en commits separados.
+- Decisión: no se reescribirá el historial de `git` para simular retroactivamente una separación de commits que no ocurrió. La excepción queda aceptada y documentada tal como fue detectada por la revisión independiente, conforme a `docs/WORKFLOW-METHODOLOGY-v2.md` §15.
+- Persona que acepta la excepción: Hugo Cornejo Villena (responsable del piloto).
+- Duración de la excepción: aplica únicamente a esta sesión (EXP-007-S01); no se generaliza como práctica permanente del workflow.
+- Resultado: excepción aceptada; no bloquea la aprobación de EXP-007 en tanto quede documentada.
+
 ### Riesgos pendientes
 
-- No existe revisión técnica independiente todavía: esta sesión corresponde únicamente al contexto de implementación (Gate 2); el nivel de control alto exige un contexto separado para la revisión (Gate 3), que no se ha ejecutado.
-- No se ensayó la reversión (`git revert` o `git reset --hard` al punto de restauración); el nivel de control alto recomienda ensayarla antes del merge cuando sea viable.
+Estado de los hallazgos de la revisión técnica independiente:
+
+- **H1 — Reversión no ensayada: resuelto.** Ver sección 12 ("Ensayo de reversión"): ensayo realizado en la rama desechable `pilot-002/exp-007-reversal-test`, con resultado 12 PASS, 0 FAIL, 2 NO EJECUTADOS y `T005-FINAL` en PASS.
+- **H2 — Gate 0 y Gate 2 en un único commit: aceptado y documentado como excepción operativa.** Ver subsección anterior ("Excepción de trazabilidad registrada"). No se revertirá ni se reescribirá el historial para separar retroactivamente los commits.
+- **H3 — El plan de reversión recomendaba `git reset --hard` como método: resuelto.** Ver sección 12 ("Reversión"): el plan quedó corregido para establecer `git revert` como procedimiento normal, sin `git reset --hard` como método recomendado y sin uso de `git push --force`.
+
+Riesgos pendientes no relacionados con H1/H2/H3, aún abiertos:
+
 - Al iniciar la edición de una segunda tarea mientras otra sigue en edición, el borrador de la primera se descarta silenciosamente en favor de la segunda (comportamiento esperado por el modelo de "un solo borrador", pero no se muestra ninguna advertencia al usuario sobre la pérdida de cambios no guardados de la tarea previamente en edición).
 - El mensaje de error de guardado rechazado (`Revisa el título y la fecha límite.`) es genérico y no distingue si el problema es el título, la fecha, o ambos; no estaba explícitamente exigido por CA-01 a CA-10, pero podría mejorarse en una iteración futura.
 - No se realizó una verificación manual en un navegador con interacción real de usuario (solo ejecución headless de la suite automatizada); se recomienda una verificación manual antes de aprobar el pull request.
@@ -137,8 +155,22 @@ El responsable humano aprobó Gate 0 (documentación) y autorizó explícitament
 ## 12. Reversión
 
 - Punto de restauración: commit `66d46b06b54232f52c87815515441c2f713a131e`.
-- Método: `git reset --hard 66d46b06b54232f52c87815515441c2f713a131e` dentro de la rama, o descartar los cambios de trabajo y volver a este commit.
-- Reversión ejecutada: no; no corresponde en esta etapa (no hubo fallo grave ni regla de bloqueo).
+- Método (corregido — hallazgo H3 de la revisión independiente): `git revert` es el procedimiento normal de reversión para esta implementación, conforme a `docs/WORKFLOW-METHODOLOGY-v2.md` §10.7. `git reset --hard` no debe figurar como método recomendado. No se utilizará `git push --force` bajo ninguna circunstancia.
+- Reversión ejecutada sobre la rama de trabajo de EXP-007: no; no corresponde en esta etapa (no hubo fallo grave ni regla de bloqueo sobre `pilot-002/exp-007-task-editing`).
+
+### Ensayo de reversión (hallazgo H1 — resuelto)
+
+El ensayo se realizó íntegramente en una rama desechable, sin afectar la rama de trabajo de EXP-007:
+
+- Rama de ensayo: `pilot-002/exp-007-reversal-test`.
+- Commit revertido: `06adeb7`.
+- Commit de revert: `151c8df` (mediante `git revert`, sin reescribir historial ni usar `git push --force`).
+- Resultado de la suite tras revertir: 12 PASS, 0 FAIL, 2 NO EJECUTADOS.
+- `T005-FINAL`: PASS.
+- Working tree limpio tras el ensayo.
+- La rama principal de EXP-007 (`pilot-002/exp-007-task-editing`) quedó intacta durante todo el ensayo: ningún comando se ejecutó sobre ella, y el ensayo completo ocurrió en `pilot-002/exp-007-reversal-test`.
+- La rama de ensayo se eliminará después de volver a la rama principal de EXP-007.
+- Conclusión: el procedimiento de reversión mediante `git revert` es viable y reproducible; H1 queda resuelto.
 
 ## 13. Evaluación preliminar
 
