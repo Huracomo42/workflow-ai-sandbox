@@ -232,3 +232,13 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener compatibilidad con el modelo actual y evitar ampliar innecesariamente el dominio.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 21 — Opciones del filtro de prioridad
+
+- Fecha: 19 de julio de 2026
+- Decisión: el filtro de prioridad tendrá únicamente las opciones `Todas`, `Baja`, `Media` y `Alta`.
+- Restricción: no existirá una opción separada para tareas sin prioridad.
+- Regla relacionada: toda tarea sin prioridad válida será tratada como prioridad `Media`.
+- Motivo: evitar una categoría incompatible con las reglas de normalización ya aprobadas.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
