@@ -375,3 +375,52 @@ Confirmado:
 ## Excepciones (ajuste previo a reversión)
 
 Ninguna registrada.
+
+---
+
+## 29. Gate 4 — Ensayo de reversión (sexta entrega)
+
+- Fecha: 19 de julio de 2026.
+- Instrucción recibida: "Gate 4 autorizado para ejecutar el ensayo de reversión de EXP-010." Objetivo: demostrar que los cambios de EXP-010 pueden revertirse y restaurarse de forma trazable, sin reescribir historial y sin afectar `main`.
+- **Nota de numeración**: la instrucción llama "Gate 4" al ensayo de reversión, mientras que `experiments/EXP-010-TB-14.md` §12 lo define como Gate 5 (Gate 4 = rúbrica de control alto, todavía pendiente, aún no ejecutada). Se registra esta discrepancia sin corregirla en esta entrega, ya que TB-14.md no está autorizado para edición en esta entrega (solo `EXP-010-reversal-test.md` y este registro). El contenido técnico del ensayo (lo que efectivamente se hizo) no depende de qué número de gate se le asigne.
+- Punto de restauración registrado: `pilot-003/exp-010-priority-base` @ `a840a1b` (HEAD en el momento de iniciar el ensayo; árbol de trabajo limpio, sin cambios pendientes).
+- Rama desechable creada: `pilot-003/exp-010-reversal-test`, desde `a840a1b`.
+
+### Commits identificados (main..HEAD, 6 commits, mapeados a las 6 categorías solicitadas)
+
+`d55f645` (documentación inicial), `9a64754` (fase roja), `fecdbea` (corrección de `waitForFrame()`), `02238a6` (implementación VS-01), `42ff4d3` (revisión independiente), `a840a1b` (cierre de hallazgos).
+
+### Reversión
+
+`git revert --no-edit` en orden inverso: `a840a1b` → `42ff4d3` → `02238a6` → `fecdbea` → `9a64754` → `d55f645`. **Cero conflictos** en las 6 operaciones. No se usó `git reset --hard`, `rebase`, `push --force` ni edición manual. Verificado que el árbol resultante es idéntico a `main` para `app.js`/`index.html`/`styles.css`/`test-runner.js` (`git diff main --stat` sin salida); `priority` ausente de `app.js` (0 coincidencias); `T010` ausente de `test-runner.js` (0 coincidencias).
+
+### Suite tras revertir
+
+Servidor HTTP local (puerto 8013) + Microsoft Edge headless 150.0.4078.83, modo `normal`. Resultado: **23 casos — 21 PASS, 0 FAIL, 2 NO EJECUTADO** (línea base EXP-005/EXP-007 íntegra; ningún caso `T010-*` presente; sin fallos heredados; sin errores del ejecutor).
+
+### Restauración
+
+`git revert --no-edit` sobre los 6 commits de reversión, en orden que reaplica los cambios originales cronológicamente: revert de `f0dafc5` → `ca4b8ac` → `244ce34` → `098d807` → `85c836c` → `7d7b799`. **Cero conflictos** en las 6 operaciones. Árbol restaurado verificado idéntico al punto de restauración (`git diff a840a1b --stat` sin salida).
+
+### Suite tras restaurar
+
+Servidor HTTP local (puerto 8014) + Edge headless, modo `normal`. Resultado confirmado: **39 casos — 37 PASS, 0 FAIL, 2 NO EJECUTADO**, coincidiendo exactamente con el resultado esperado.
+
+### Cierre
+
+- Regreso a `pilot-003/exp-010-priority-base` (`git checkout`); HEAD nuevamente en `a840a1b`.
+- `main` verificado sin cambios (`43185f4`).
+- Rama desechable `pilot-003/exp-010-reversal-test` **conservada, no fusionada, no eliminada**, con los 12 commits de reversión/restauración disponibles para inspección.
+- No se creó commit en `pilot-003/exp-010-priority-base`.
+- No se modificó código productivo ni pruebas en esta rama; todo el ensayo ocurrió en la rama desechable.
+- Detalle completo, tabla de commits y evidencia íntegra en `experiments/EXP-010-reversal-test.md`.
+
+## Estado de salida tras Gate 4
+
+- Ensayo de reversión: completado y válido. Gate 4 superado.
+- Gates pendientes: 5 (rúbrica de control alto) y 6 (aprobación humana e integración/merge).
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (Gate 4)
+
+Ninguna registrada.
