@@ -210,6 +210,7 @@ Durante la sesión:
 - Trazabilidad: completa.
 - Preguntas bloqueantes: 0.
 - Código o pruebas modificados: no.
-- Revisión independiente: pendiente.
-- Evaluación: pendiente.
-- Gate de cierre de EXP-009: no autorizado.
+- Revisión independiente: aprobada en segunda revisión.
+- Evaluación: aprobada con 48/50.
+- Gate de cierre de EXP-009: autorizado por Hugo Cornejo Villena el 19 de julio de 2026.
+- Pull request: autorizado para apertura.
