@@ -51,3 +51,16 @@ Registrar las excepciones al workflow y las decisiones vinculantes aprobadas por
 - Persona que autoriza: Hugo Cornejo Villena.
 - Regla futura: cualquier vacío documental detectado en el futuro debe declararse explícitamente como tal, no rellenarse con contenido inventado (fechas, autores, puntajes, evidencias o aprobaciones).
 - Fuente: decisión adoptada en la conversación de regularización documental de PILOT-002 (18 de julio de 2026).
+
+---
+
+## Decisión 5 — Aprobación del paquete operativo de PILOT-003
+
+- Fecha: 19 de julio de 2026
+- Decisión: se aprueba el contenido del paquete operativo formal de PILOT-003, compuesto por EXP-008, EXP-009 y EXP-010, y orientado a validar requisitos, diseño de ingeniería e implementación mediante una vertical slice.
+- Alcance de la aprobación: autoriza la incorporación documental del paquete, TB-14, plantillas, protocolos y controles previos.
+- Restricción: esta decisión no autoriza ejecutar EXP-008 ni modificar código de la aplicación.
+- Ajustes obligatorios: PILOT-003 queda sujeto a los Ajustes E, F, G, H, I y J establecidos en el cierre de PILOT-002.
+- Persona que autoriza: Hugo Cornejo Villena.
+- Fuente: aprobación explícita registrada el 19 de julio de 2026; `docs/PILOT-003-operational-package.md`.
+- Gate asociado: P3-0B permanece abierto hasta que todos los artefactos previos estén versionados e integrados.

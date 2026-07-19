@@ -151,3 +151,25 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 - Estado del piloto: en preparación de cierre (cierre formal pendiente de `docs/PILOT-002-closure-report.md`)
 - Responsable: Hugo Cornejo Villena
 - Fecha: 18 de julio de 2026 (fecha de esta regularización documental; no es la fecha de cierre formal del piloto)
+
+---
+
+## PILOT-003 — Inicialización previa a ejecución
+
+- Fecha de inicialización: 19 de julio de 2026
+- Estado del piloto: preparación documental
+- Gate: P3-0B abierto
+- Experimentos planificados: EXP-008, EXP-009 y EXP-010
+- Experimentos ejecutados: 0
+- Experimentos evaluados: 0
+- Código modificado: no
+- Paquete operativo: aprobado e incorporado en rama documental
+- Regla de actualización: este tablero deberá actualizarse al cierre real de cada experimento, conforme al Ajuste H.
+
+| ID | Tarea | Componente evaluado | Ruta | Control | Estado | Puntuación | Decisión |
+|---|---|---|---|---|---|---:|---|
+| EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | no iniciado | — | Pendiente |
+| EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | bloqueado por EXP-008 | — | Pendiente |
+| EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | bloqueado por EXP-009 | — | Pendiente |
+
+No se registran resultados, fechas de ejecución, puntajes ni evidencias porque los experimentos aún no han comenzado.
