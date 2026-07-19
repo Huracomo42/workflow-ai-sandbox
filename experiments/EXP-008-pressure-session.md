@@ -130,3 +130,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: hacer visible que existen tareas ocultas por los filtros activos.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 10 — Representación visible de prioridad
+
+- Fecha: 19 de julio de 2026
+- Decisión: la prioridad se mostrará mediante texto visible: `Baja`, `Media` y `Alta`.
+- Restricción: el significado de la prioridad no dependerá únicamente de colores o iconos.
+- Motivo: evitar ambigüedad y preservar accesibilidad básica.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
