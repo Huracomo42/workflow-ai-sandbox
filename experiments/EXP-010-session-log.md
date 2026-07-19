@@ -178,3 +178,128 @@ Confirmado:
 ## Excepciones (Gate 1)
 
 Ninguna registrada.
+
+---
+
+## 15. Gate 2 — Autorización e implementación de VS-01 (tercera entrega)
+
+- Fecha de ejecución: 19 de julio de 2026.
+- Instrucción recibida de Hugo Cornejo Villena: "La fase roja de EXP-010 queda aprobada. Gate 2 autorizado para implementar exclusivamente VS-01 — Prioridad base y compatibilidad."
+- Alcance autorizado: corregir la divergencia de numeración en `EXP-010-TB-14.md` y `EXP-010-test-plan.md`; implementar VS-01 en `app.js`, `index.html` y `styles.css`; modificar `test-runner.js` solo ante un defecto real de prueba; ejecutar la suite completa; registrar el resultado únicamente en este archivo. No autoriza commit.
+
+## 16. Corrección previa de numeración (antes de implementar)
+
+Se corrigió la tabla de T010-10 a T010-14 en `experiments/EXP-010-TB-14.md` §9 y las secciones correspondientes de `experiments/EXP-010-test-plan.md` para alinearlas con la numeración canónica de `experiments/EXP-009-test-design.md` §6 (la misma ya usada al implementar las pruebas en Gate 1):
+
+- T010-10: selector ofrece únicamente Baja, Media y Alta;
+- T010-11: Media aparece seleccionada inicialmente;
+- T010-12: prioridad visible mediante texto;
+- T010-13: regresión completa;
+- T010-14: ausencia de dependencias externas.
+
+`experiments/EXP-010-implementation-plan.md` no contenía descripciones divergentes por ID (solo referencias genéricas a "T010-01 a T010-14"); no requirió corrección.
+
+## 17. Decisiones implementadas
+
+En `app.js`:
+
+1. `VALID_PRIORITIES = ['low', 'medium', 'high']`, `DEFAULT_PRIORITY = 'medium'`, `PRIORITY_LABELS = { low: 'Baja', medium: 'Media', high: 'Alta' }`.
+2. `isValidPriority(priority)` valida pertenencia exacta al conjunto permitido.
+3. `createTask(title, dueDate, priority)`: si `priority` es `undefined` (tercer argumento omitido), usa `DEFAULT_PRIORITY`.
+4. `createTask`: si `priority` está definida y no es válida, retorna `null` sin persistir nada (rechazo atómico); si es válida, se persiste exactamente ese valor.
+5. `normalizeTask(task)` / `normalizePriority(priority)`: prioridad válida se conserva; ausente o desconocida se normaliza a `medium`.
+6. `loadTasks()` aplica `normalizeTask` en memoria sobre el resultado de `JSON.parse`, sin invocar `saveTasks()` como efecto de la normalización.
+7. El manejo de JSON corrupto (`try/catch` → `saveTasks([])` → `[]`) se conservó sin cambios.
+8. `index.html`: `<select id="task-priority">` dentro de `#task-form`, con `<option>` Baja/Media/Alta y `medium` marcada `selected`.
+9. El manejador de envío en `app.js` lee `task-priority` y lo pasa como tercer argumento a `createTask`.
+10. Tras una creación exitosa, el manejador restablece `priorityInput.value = DEFAULT_PRIORITY`.
+11. `renderReadRow` añade un `<span class="priority-label">` con el texto `Prioridad: Baja|Media|Alta`, obtenido mediante `getPriorityLabel(task.priority)`.
+12. `styles.css`: dos reglas mínimas (`select#task-priority`, `.priority-label`), sin rediseño general.
+13. `createTask(title, dueDate)` sin tercer argumento sigue funcionando sin cambios de comportamiento para quien la invoque así (compatibilidad verificada por T005-*/T007-* y T010-01).
+14. No se implementó edición de prioridad, filtros, transición reversible de estado, ordenamiento ni refactorizaciones fuera de lo descrito arriba. `updateTask`/`completeTask`/`saveEditTask` no se modificaron: la prioridad de una tarea existente se conserva implícitamente porque esas funciones nunca tocan el campo `priority`.
+
+Mensaje de error de prioridad (`TASK_PRIORITY_ERROR_MESSAGE`, mostrado mediante un `showFieldError`/`hideFieldError` generalizados a partir de los antiguos `showTitleError`/`hideTitleError`) añadido para no confundirse con el mensaje de título, conforme a `experiments/EXP-009-feature-specification.md` §9. Esta ruta no es alcanzable actualmente desde la interfaz (el `<select>` solo ofrece valores válidos) pero cubre `createTask` invocado con una prioridad inválida por otras vías.
+
+## 18. Hallazgo: defecto real en `test-runner.js` (`waitForFrame`)
+
+Al ejecutar la fase verde, `T010-10` seguía en FAIL pese a que `index.html` ya contenía el `<select>` de prioridad. Se investigó y se determinó que `waitForFrame()` podía resolver su promesa contra el documento `about:blank` inicial del iframe (previo a la navegación real a `index.html`) cuando su comprobación síncrona rápida se ejecutaba antes de que la navegación real terminara. Esto es un defecto preexistente del arnés compartido, no introducido en esta entrega: pasó inadvertido en `T005-10`/`T007-09`/`T010-14` porque esas pruebas verifican la *ausencia* de referencias externas, condición que también se cumple trivialmente en un documento `about:blank` vacío (falso positivo silencioso). `T010-10`/`T010-11` verifican la *presencia* de un elemento, lo que expuso el defecto.
+
+Corrección aplicada en `waitForFrame()` (única modificación de `test-runner.js` en esta entrega, no relacionada con adaptar expectativas): la comprobación rápida ahora exige además `frame.contentWindow.location.href !== 'about:blank'`, de modo que solo se considera "cargado" el documento realmente navegado a `index.html`, no el marcador de posición inicial. Diagnóstico y verificación del defecto realizados con un archivo temporal fuera del repositorio (`debug-select.html`, servido por el mismo servidor HTTP local), eliminado antes de cerrar esta entrega; no queda en el árbol de trabajo.
+
+Ningún caso de prueba (`T005-*`, `T007-*`, `T010-01` a `T010-14`, `T005-CONTROL-*`, `T005-FINAL`) fue rebajado, eliminado ni tuvo su expectativa alterada por esta corrección.
+
+## 19. Ejecución (fase verde)
+
+- Servidor: `python -m http.server 8011`, servido desde la raíz del repositorio.
+- Navegador: Microsoft Edge headless, versión 150.0.4078.83.
+- Comando: `msedge --headless --disable-gpu --virtual-time-budget=8000 --dump-dom http://localhost:8011/tests.html`, modo `normal`.
+- Antes de la corrección del defecto: `data-test-status="fail"`, totales `{total:37, passed:33, failed:1, notRun:3}` — único fallo: `T010-10` (causa: defecto de `waitForFrame`, no de la implementación de VS-01; ver §18).
+- Después de la corrección: `data-test-status="pass"`, `data-test-general-status="PASS CON NO EJECUTADOS"`.
+- Totales finales: **37 casos — 35 PASS, 0 FAIL, 2 NO EJECUTADO.**
+- Ejecución repetida una segunda vez para confirmar ausencia de intermitencia: mismo resultado.
+
+### Resultado individual T010-01 a T010-14 (fase verde)
+
+| ID | Estado |
+|---|---|
+| T010-01 | PASS |
+| T010-02 | PASS |
+| T010-03 | PASS |
+| T010-04 | PASS |
+| T010-05 | PASS |
+| T010-06 | PASS |
+| T010-07 | PASS |
+| T010-08 | PASS |
+| T010-09 | PASS |
+| T010-10 | PASS |
+| T010-11 | PASS |
+| T010-12 | PASS |
+| T010-13 | PASS |
+| T010-14 | PASS |
+
+### NO EJECUTADO restantes
+
+Únicamente los controles deliberados del ejecutor, en modo `normal`:
+
+- `T005-CONTROL-ASSERT` — "Solo se ejecuta con ?mode=assertion-failure."
+- `T005-CONTROL-EXCEPTION` — "Solo se ejecuta con ?mode=exception."
+
+## 20. Confirmación de regresión
+
+`T005-01` a `T005-10`, `T007-01` a `T007-09` y `T005-FINAL`: **20/20 en PASS**, sin cambios de expectativa. `T010-13` (que evalúa esta misma condición en tiempo de ejecución) también en PASS.
+
+## 21. Validación de los criterios de validez de la fase verde
+
+- T010-01 a T010-14 pasan: sí (§19).
+- Todas las T005 y T007 siguen pasando: sí (§20).
+- No hay fallos ni casos nuevos no ejecutados: sí, 0 FAIL, y los únicos NO EJECUTADO son los dos controles deliberados preexistentes.
+- Los únicos NO EJECUTADOS siguen siendo los controles deliberados del ejecutor: confirmado (§19).
+- No se añadieron dependencias: confirmado por `T005-10`, `T007-09` y `T010-14`, los tres en PASS.
+- No se modificó alcance diferido: confirmado en §22.
+
+**Conclusión: la fase verde es válida.**
+
+## 22. Control del alcance de esta entrega
+
+Confirmado:
+
+- se modificaron `app.js`, `index.html` y `styles.css` conforme al plan congelado;
+- se modificó `test-runner.js` únicamente para corregir el defecto de `waitForFrame` descrito en §18 (no para adaptar expectativas a la implementación);
+- se corrigieron `experiments/EXP-010-TB-14.md` y `experiments/EXP-010-test-plan.md` (numeración, §16), antes de implementar;
+- no se modificó `tests.html`;
+- no se modificaron `experiments/EXP-010-implementation-plan.md`, `EXP-010-independent-review.md`, `EXP-010-reversal-test.md` ni `EXP-010-evaluation.md`;
+- no se implementó edición de prioridad, filtros, transición reversible de estado, ordenamiento, estados vacíos diferenciados ni refactorizaciones generales;
+- no se añadieron dependencias externas;
+- no se creó commit.
+
+## 23. Estado de salida tras Gate 2 (fase verde)
+
+- Fase verde: completada y válida.
+- VS-01: implementada conforme al plan congelado en `experiments/EXP-010-implementation-plan.md`.
+- Regresión: íntegra.
+- Revisión técnica independiente (Gate 3), rúbrica de control alto (Gate 4) y ensayo de reversión (Gate 5): pendientes, cada uno requiere autorización separada.
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (Gate 2)
+
+Ninguna registrada. El hallazgo de §18 se documenta como defecto corregido del arnés de pruebas, no como excepción al alcance autorizado.

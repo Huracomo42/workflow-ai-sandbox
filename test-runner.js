@@ -53,7 +53,19 @@
         resolve();
       }
 
-      if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+      function isFrameReady() {
+        try {
+          return Boolean(
+            frame.contentDocument &&
+              frame.contentDocument.readyState === 'complete' &&
+              frame.contentWindow.location.href !== 'about:blank'
+          );
+        } catch (error) {
+          return false;
+        }
+      }
+
+      if (isFrameReady()) {
         finish();
         return;
       }
