@@ -193,13 +193,17 @@ borrador activo
 → no escribir en localStorage
 ```
 
-### Completar
+```markdown
+### Cambiar estado
 
 ```text
-tarea pendiente existente
-→ completed = true
+tarea existente
+→ invertir completed
+→ permitir Pendiente → Completada
+→ permitir Completada → Pendiente
 → conservar id, título, fecha, prioridad y posición
 → persistir colección completa
+→ reevaluar visibilidad con los filtros activos
 ```
 
 ### Filtrar

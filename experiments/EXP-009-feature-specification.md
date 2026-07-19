@@ -169,9 +169,28 @@ El control deberá ofrecer exclusivamente:
 
 ### RF-14 — Reevaluación tras cambio de estado
 
-**Dado** que una tarea visible cambia a completada,  
-**cuando** deja de coincidir con el filtro de estado,  
-**entonces** deberá desaparecer inmediatamente de la vista.
+Este requisito debe cumplirse en ambas direcciones.
+
+#### Pendiente → Completada
+
+**Dado** que una tarea pendiente coincide con los filtros activos,  
+**cuando** se marca como completada,  
+**entonces** deberá reevaluarse inmediatamente,  
+**y** deberá desaparecer si deja de coincidir con el filtro de estado.
+
+#### Completada → Pendiente
+
+**Dado** que una tarea completada coincide con los filtros activos,  
+**cuando** se desmarca y vuelve a Pendiente,  
+**entonces** deberá reevaluarse inmediatamente,  
+**y** deberá desaparecer si deja de coincidir con el filtro de estado.
+
+En ambas transiciones deberá conservarse:
+
+- el `id`;
+- la prioridad;
+- la posición;
+- el estado de los filtros activos.
 
 ### RF-15 — Restablecimiento de vista
 

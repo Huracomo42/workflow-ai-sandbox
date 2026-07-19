@@ -23,7 +23,8 @@
 | RF-11 | Crear, editar o completar conserva filtros durante la sesión | RI-09 | VS-03, VS-04, VS-05 | T014-01, T014-02, T014-03 | estado `activeFilters` conservado |
 | RF-12 | Tarea nueva no coincidente se guarda pero no se muestra | RI-04, RI-09 | VS-05 | T014-04 | tarea persistida y ausente de vista |
 | RF-13 | Tarea editada que deja de coincidir desaparece de la vista | RI-09 | VS-05 | T014-05 | tarea persistida y vista reevaluada |
-| RF-14 | Cambio de estado reevalúa inmediatamente la visibilidad | RI-09 | VS-03 | T012-05 | tarea desaparece de vista filtrada |
+| RF-14A | Pendiente → Completada reevalúa inmediatamente la visibilidad | RI-09 | VS-03 | T012-05 | tarea desaparece o aparece según filtros |
+| RF-14B | Completada → Pendiente reevalúa inmediatamente la visibilidad | RI-09 | VS-03 | T012-06 | tarea desaparece o aparece según filtros |
 | RF-15 | Restablecer ambos filtros muestra todas las tareas sin alterar datos | RI-04, RI-05 | VS-04 | T013-07 | colección completa visible y almacenamiento intacto |
 | RF-16 | Colección vacía muestra `No hay tareas registradas` | RI-09 | VS-06 | T015-01 | mensaje exacto |
 | RF-17 | Sin coincidencias muestra mensaje diferenciado | RI-09 | VS-06 | T015-02 | mensaje exacto de filtros |
@@ -75,7 +76,8 @@
 | filtros sin coincidencias | VS-06 | T015-02 |
 | creación que no coincide | VS-05 | T014-04 |
 | edición que deja de coincidir | VS-05 | T014-05 |
-| cambio de estado elimina de vista | VS-03 | T012-05 |
+| Pendiente → Completada reevalúa la vista | VS-03 | T012-05 |
+| Completada → Pendiente reevalúa la vista | VS-03 | T012-06 |
 | restablecimiento de filtros | VS-04 | T013-07 |
 | recarga con filtros activos | VS-03, VS-04 | T012-04, T013-06 |
 | conservación de orden | VS-02, VS-05 | T011-03, T014-06 |
