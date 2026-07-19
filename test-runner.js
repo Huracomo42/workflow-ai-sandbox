@@ -154,6 +154,17 @@
     afterEach: resetStorage
   };
 
+  const editIsolation = {
+    beforeEach() {
+      resetStorage();
+      cancelEditTask();
+    },
+    afterEach() {
+      resetStorage();
+      cancelEditTask();
+    }
+  };
+
   const testCases = [
     {
       id: 'T005-01',
@@ -255,6 +266,209 @@
     {
       id: 'T005-10',
       name: 'No se añadieron dependencias externas en index.html',
+      async run() {
+        await waitForFrame(indexFrame);
+        const frameDocument = indexFrame.contentDocument || indexFrame.contentWindow.document;
+        const references = findExternalRefs(frameDocument);
+        assert(references.length === 0, `Referencias externas: ${references.join(', ')}`);
+      }
+    },
+    {
+      id: 'T007-01',
+      name: 'Activar edición inline y guardar persiste título y fecha (CA-01, CA-02)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Tarea pendiente', '2026-08-01');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+
+        const list = document.createElement('ul');
+        renderTasks(list);
+
+        const editButton = Array.from(list.querySelectorAll('button')).find(
+          (btn) => btn.dataset.editId === created.id
+        );
+        assert(Boolean(editButton), 'No se encontró el botón Editar para la tarea.');
+        editButton.click();
+
+        const titleInput = list.querySelector(`input[data-edit-title="${created.id}"]`);
+        const dueDateInput = list.querySelector(`input[data-edit-due-date="${created.id}"]`);
+        assert(
+          Boolean(titleInput) && Boolean(dueDateInput),
+          'No se activó el modo edición inline para la tarea.'
+        );
+
+        titleInput.value = 'Tarea editada';
+        titleInput.dispatchEvent(new Event('input'));
+        dueDateInput.value = '2026-09-01';
+        dueDateInput.dispatchEvent(new Event('input'));
+
+        const saveButton = list.querySelector(`button[data-save-id="${created.id}"]`);
+        assert(Boolean(saveButton), 'No se encontró el botón Guardar.');
+        saveButton.click();
+
+        const reloaded = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(reloaded) && reloaded.title === 'Tarea editada' && reloaded.dueDate === '2026-09-01',
+          'La edición no se persistió correctamente.'
+        );
+      }
+    },
+    {
+      id: 'T007-02',
+      name: 'Editar una tarea completada conserva su estado completado (CA-08)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Tarea completada', '');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+        completeTask(created.id);
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        assert(Boolean(draft), 'No se activó el borrador de edición.');
+        draft.title = 'Tarea completada editada';
+
+        const saved = saveEditTask();
+        assert(saved !== null && saved.completed === true, 'La tarea dejó de estar completada.');
+
+        const reloaded = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(reloaded) && reloaded.title === 'Tarea completada editada' && reloaded.completed === true,
+          'La edición no conservó el estado completado.'
+        );
+      }
+    },
+    {
+      id: 'T007-03',
+      name: 'Un título inválido rechaza el guardado completo, incluida la fecha (CA-03)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Original', '2026-08-01');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        draft.title = '   ';
+        draft.dueDate = '2026-09-01';
+
+        const saved = saveEditTask();
+        assert(saved === null, 'Se aceptó un título inválido.');
+
+        const reloaded = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(reloaded) && reloaded.title === 'Original' && reloaded.dueDate === '2026-08-01',
+          'La tarea original no permaneció intacta tras el rechazo.'
+        );
+        assert(getEditingDraft() !== null, 'El borrador debía permanecer activo tras el rechazo.');
+      }
+    },
+    {
+      id: 'T007-04',
+      name: 'Una fecha inválida rechaza el guardado completo, incluido el título (CA-04)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Original', '2026-08-01');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        draft.title = 'Editado';
+        draft.dueDate = 'fecha-invalida';
+
+        const saved = saveEditTask();
+        assert(saved === null, 'Se aceptó una fecha inválida.');
+
+        const reloaded = loadTasks().find((t) => t.id === created.id);
+        assert(
+          Boolean(reloaded) && reloaded.title === 'Original' && reloaded.dueDate === '2026-08-01',
+          'La tarea original no permaneció intacta tras el rechazo.'
+        );
+        assert(getEditingDraft() !== null, 'El borrador debía permanecer activo tras el rechazo.');
+      }
+    },
+    {
+      id: 'T007-05',
+      name: 'Solo una tarea puede estar en modo edición a la vez (CA-05)',
+      ...editIsolation,
+      run() {
+        const first = createTask('Primera', '');
+        const second = createTask('Segunda', '');
+        assert(first !== null && second !== null, 'No se pudieron crear las tareas previas.');
+
+        beginEditTask(first.id);
+        assert(getEditingDraft().id === first.id, 'No se activó la edición de la primera tarea.');
+
+        beginEditTask(second.id);
+        const draft = getEditingDraft();
+        assert(
+          Boolean(draft) && draft.id === second.id,
+          'Debía existir un único borrador activo, correspondiente a la segunda tarea.'
+        );
+      }
+    },
+    {
+      id: 'T007-06',
+      name: 'Mientras se edita, localStorage no se modifica hasta confirmar (CA-06)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Original', '2026-08-01');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+        const before = localStorage.getItem(STORAGE_KEY);
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        draft.title = 'Cambiado en el borrador';
+        draft.dueDate = '2026-10-10';
+
+        const during = localStorage.getItem(STORAGE_KEY);
+        assert(during === before, 'localStorage cambió antes de confirmar el guardado.');
+      }
+    },
+    {
+      id: 'T007-07',
+      name: 'Cancelar la edición descarta el borrador sin alterar localStorage (CA-07)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Original', '2026-08-01');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+        const before = localStorage.getItem(STORAGE_KEY);
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        draft.title = 'No debería guardarse';
+
+        cancelEditTask();
+        assert(getEditingDraft() === null, 'El borrador debía eliminarse al cancelar.');
+
+        const after = localStorage.getItem(STORAGE_KEY);
+        assert(after === before, 'localStorage se modificó al cancelar la edición.');
+
+        const reloaded = loadTasks().find((t) => t.id === created.id);
+        assert(Boolean(reloaded) && reloaded.title === 'Original', 'El título original se alteró al cancelar.');
+      }
+    },
+    {
+      id: 'T007-08',
+      name: 'El id de la tarea no cambia tras editar (CA-09)',
+      ...editIsolation,
+      run() {
+        const created = createTask('Original', '');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+
+        beginEditTask(created.id);
+        const draft = getEditingDraft();
+        draft.title = 'Editada';
+        draft.dueDate = '2026-08-01';
+
+        const saved = saveEditTask();
+        assert(saved !== null && saved.id === created.id, 'El id cambió tras editar.');
+
+        const all = loadTasks();
+        assert(all.length === 1 && all[0].id === created.id, 'El id de la tarea persistida cambió.');
+      }
+    },
+    {
+      id: 'T007-09',
+      name: 'La edición de tareas no añadió referencias externas en index.html (CA-10)',
       async run() {
         await waitForFrame(indexFrame);
         const frameDocument = indexFrame.contentDocument || indexFrame.contentWindow.document;
