@@ -187,3 +187,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Requisito funcional vigente: la interfaz mostrará `Baja`, `Media` y `Alta`.
 - Próxima evaluación: EXP-009, durante el modelo de dominio y diseño modular.
 - Autoriza el diferimiento: Hugo Cornejo Villena.
+
+## Decisión funcional 16 — Aplicación inmediata de filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: cualquier cambio en los filtros de estado o prioridad actualizará inmediatamente la lista visible.
+- Restricción: no existirá un botón adicional de `Aplicar`.
+- Motivo: reducir fricción y mantener un comportamiento directo y predecible.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
