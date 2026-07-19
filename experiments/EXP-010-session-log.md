@@ -378,11 +378,11 @@ Ninguna registrada.
 
 ---
 
-## 29. Gate 4 — Ensayo de reversión (sexta entrega)
+## 29. Gate 5 — Ensayo de reversión (sexta entrega)
 
 - Fecha: 19 de julio de 2026.
 - Instrucción recibida: "Gate 4 autorizado para ejecutar el ensayo de reversión de EXP-010." Objetivo: demostrar que los cambios de EXP-010 pueden revertirse y restaurarse de forma trazable, sin reescribir historial y sin afectar `main`.
-- **Nota de numeración**: la instrucción llama "Gate 4" al ensayo de reversión, mientras que `experiments/EXP-010-TB-14.md` §12 lo define como Gate 5 (Gate 4 = rúbrica de control alto, todavía pendiente, aún no ejecutada). Se registra esta discrepancia sin corregirla en esta entrega, ya que TB-14.md no está autorizado para edición en esta entrega (solo `EXP-010-reversal-test.md` y este registro). El contenido técnico del ensayo (lo que efectivamente se hizo) no depende de qué número de gate se le asigne.
+- **Corrección de numeración** (aplicada en la entrega siguiente, de evaluación formal): la instrucción citada llamó "Gate 4" a este ensayo; `experiments/EXP-010-TB-14.md` §12 lo define como **Gate 5** (Gate 4 = rúbrica de control alto). Esta sección se renombró de "Gate 4" a "Gate 5" para alinearse con la numeración oficial de TB-14.md; el contenido técnico del ensayo (lo efectivamente ejecutado) no cambia.
 - Punto de restauración registrado: `pilot-003/exp-010-priority-base` @ `a840a1b` (HEAD en el momento de iniciar el ensayo; árbol de trabajo limpio, sin cambios pendientes).
 - Rama desechable creada: `pilot-003/exp-010-reversal-test`, desde `a840a1b`.
 
@@ -415,12 +415,129 @@ Servidor HTTP local (puerto 8014) + Edge headless, modo `normal`. Resultado conf
 - No se modificó código productivo ni pruebas en esta rama; todo el ensayo ocurrió en la rama desechable.
 - Detalle completo, tabla de commits y evidencia íntegra en `experiments/EXP-010-reversal-test.md`.
 
+## Estado de salida tras Gate 5
+
+- Ensayo de reversión: completado y válido. Gate 5 superado.
+- Gates pendientes: 4 (rúbrica de control alto) y 6 (aprobación humana e integración/merge).
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (Gate 5)
+
+Ninguna registrada.
+
+---
+
+## 30. Gate 4 — Evaluación formal mediante rúbrica (séptima entrega)
+
+- Fecha: 19 de julio de 2026.
+- Instrucción recibida: "Inicia la evaluación formal de EXP-010." Contexto verificado por Hugo Cornejo Villena: revisión independiente aprobada sin bloqueantes, suite final 39/37/0/2, ensayo de reversión exitoso, rama restaurada exactamente, `main` intacto, rama desechable conservada, sin cambios productivos pendientes.
+- Primer paso autorizado: corrección de la inconsistencia de numeración de gates (Gate 4 = rúbrica; Gate 5 = ensayo de reversión; Gate 6 = autorización de PR y merge), sin alterar contenido técnico ni inventar gates nuevos.
+
+### Corrección de numeración aplicada
+
+`experiments/EXP-010-TB-14.md` §12 ya definía la numeración correcta (Gate 4 = rúbrica, Gate 5 = reversión, Gate 6 = aprobación humana e integración) desde su redacción original; no requirió cambios de numeración. La única inconsistencia real estaba en este mismo registro (§29, entrega anterior), que había titulado el ensayo de reversión como "Gate 4" siguiendo literalmente la frase de la instrucción recibida en ese momento. Se corrigió: el encabezado "## 29. Gate 4 — Ensayo de reversión" pasó a "## 29. Gate 5 — Ensayo de reversión"; "Estado de salida tras Gate 4"/"Gate 4 superado"/"Excepciones (Gate 4)" pasaron a "Gate 5"; la nota de numeración que dejaba la discrepancia sin resolver se reemplazó por una nota de corrección aplicada. No se modificó ningún otro contenido de §29 (comandos, commits, resultados de suite quedan exactamente igual).
+
+### Evaluación mediante rúbrica
+
+Completada en `experiments/EXP-010-evaluation.md`, conforme a la estructura oficial de `docs/evaluation-rubric.md` (§15 registro de puntuación, §16 cálculo, §17 umbrales de control alto, §19 reglas de bloqueo, §20 evaluación por dimensión, §21 decisión final, §22 decisión sobre el componente). Resumen:
+
+- Puntuación principal: **42/50** (umbral de control alto: 42/50 — cumplido en el límite exacto).
+- Mínimos por criterio (control alto): seguridad y control 5/5, pruebas 5/5, reversión 5/5, trazabilidad 4/5 — los cuatro cumplen su mínimo de 4/5.
+- Intervención humana (reportada aparte, no sumada): 3/5.
+- Reglas de bloqueo: ninguna activada (verificación puntual de las 12 reglas de `docs/evaluation-rubric.md` §19).
+- Resultado propuesto: **Aprobado**.
+- Decisión sobre el componente: **incorporar con restricciones** (condicionado a que Hugo Cornejo Villena decida sobre el hallazgo H2 antes de Gate 6).
+- Nota de transparencia registrada en la propia evaluación (§0 de `EXP-010-evaluation.md`): a diferencia de Gate 3, Gate 4 no exige explícitamente contexto separado del de implementación en `EXP-010-TB-14.md` §12, pero esta evaluación fue redactada por el mismo contexto que ejecutó Gates 1, 2 y 5; se deja constancia expresa de esta circunstancia.
+
+### Actualización de `experiments/EXP-010-TB-14.md`
+
+Estado actualizado: Gate 4 (rúbrica) y Gate 5 (ensayo de reversión) marcados como completados, con referencia a `experiments/EXP-010-evaluation.md` y `experiments/EXP-010-reversal-test.md` respectivamente. Gate 6 permanece pendiente. No se modificó ningún contenido técnico de TB-14.md más allá de estos campos de estado.
+
+### Actualización de `docs/results-dashboard.md`
+
+Añadida la sección "Resultado de EXP-010" en la tabla y el detalle de PILOT-003, siguiendo el mismo formato usado para EXP-008 y EXP-009. No se cerró PILOT-003 como ciclo: no se añadió reporte de cierre del piloto, conclusión general ni aprobación final del piloto; solo se registró el resultado individual de EXP-010, conforme a la regla de actualización ya vigente en ese tablero ("este tablero deberá actualizarse al cierre real de cada experimento").
+
+### Control del alcance de esta entrega
+
+Confirmado:
+
+- se modificaron únicamente `experiments/EXP-010-evaluation.md`, `experiments/EXP-010-session-log.md` (este registro), `experiments/EXP-010-TB-14.md` (numeración ya correcta; solo estado actualizado) y `docs/results-dashboard.md`;
+- no se modificó `app.js`, `index.html`, `styles.css`, `test-runner.js` ni `tests.html`;
+- no se modificaron `experiments/EXP-010-implementation-plan.md`, `experiments/EXP-010-test-plan.md`, `experiments/EXP-010-independent-review.md` ni `experiments/EXP-010-reversal-test.md`;
+- no se abrió pull request;
+- no se fusionó nada;
+- no se eliminó la rama desechable `pilot-003/exp-010-reversal-test` (verificada existente);
+- no se creó commit;
+- PILOT-003 no se cerró como ciclo.
+
 ## Estado de salida tras Gate 4
 
-- Ensayo de reversión: completado y válido. Gate 4 superado.
-- Gates pendientes: 5 (rúbrica de control alto) y 6 (aprobación humana e integración/merge).
+- Evaluación formal: completada. Gate 4 superado (42/50, umbral cumplido, sin bloqueos).
+- Gate pendiente (en el momento de esta entrega): 6 (aprobación humana e integración/merge), condicionado a la decisión de Hugo Cornejo Villena sobre H2.
 - Preguntas bloqueantes abiertas: 0.
 
 ## Excepciones (Gate 4)
 
-Ninguna registrada.
+Ninguna registrada en el momento de esta entrega. H2 quedó pendiente de decisión (ver §31, siguiente entrega, donde se acepta como excepción).
+
+---
+
+## 31. Aceptación de H2 como excepción documentada y cierre técnico de EXP-010 (octava entrega)
+
+- Fecha: 19 de julio de 2026.
+- Instrucción recibida: "Acepto H2 como excepción documentada de EXP-010." Justificación provista por Hugo Cornejo Villena: no afecta la corrección técnica; no afecta pruebas, seguridad ni reversión; corregirlo exigiría reescribir historial o fabricar commits artificiales; la cadena actual sigue siendo auditable; debe convertirse en regla preventiva para PILOT-004 (narrativa y código en el commit correspondiente, en orden cronológico).
+
+### 1. H2 aceptado como excepción no bloqueante
+
+Registrado formalmente en `experiments/EXP-010-evaluation.md` §8, conforme a `docs/WORKFLOW-METHODOLOGY-v2.md` §15 (regla omitida, motivo, riesgo, persona que autoriza, duración, medidas compensatorias, resultado). Precedente: hallazgo H2 de EXP-007, aceptado bajo el mismo mecanismo. El hallazgo permanece descrito, sin cambios, en `experiments/EXP-010-independent-review.md` (no modificado en esta entrega); su estado de aceptación consta en `EXP-010-evaluation.md`, `EXP-010-TB-14.md`, este registro y `docs/results-dashboard.md`.
+
+### 2. Puntaje final
+
+**42/50.** Sin cambios respecto de la evaluación de Gate 4 (§30): la aceptación de H2 como excepción no modifica ninguna puntuación de la rúbrica — la trazabilidad ya se había puntuado en 4/5 considerando este hallazgo abierto; aceptarlo como excepción no lo convierte en un defecto adicional ni en un mérito nuevo.
+
+### 3. Decisión final de EXP-010
+
+**Aprobado, con restricciones.** Ver `experiments/EXP-010-evaluation.md` §10-§11 (actualizado).
+
+### 4-6. Estado de gates
+
+- Gate 4 (rúbrica): completado (42/50, sin cambios).
+- Gate 5 (ensayo de reversión): completado (sin cambios).
+- Gate 6 (autorización de PR y merge): **pendiente**. Requiere autorización humana explícita para abrir el pull request y para el merge a `main`. Ya no está condicionado a H2 (resuelto como excepción); condición única restante: revisión y aprobación del pull request por Hugo Cornejo Villena.
+
+### 7. Cierre técnico de EXP-010
+
+EXP-010 queda **cerrado técnicamente**: implementación completa (Gate 2), revisión independiente aprobada (Gate 3), evaluación aprobada (Gate 4), reversión demostrada (Gate 5), único hallazgo no bloqueante pendiente de decisión (H2) resuelto como excepción documentada. **No integrado todavía**: no existe pull request abierto, no hay merge a `main`, Gate 6 sigue pendiente.
+
+### 8. Estado de PILOT-003
+
+PILOT-003 **continúa abierto**. No se redacta en esta entrega ningún reporte de cierre de piloto, conclusión general del ciclo ni aprobación final del piloto. El cierre formal de PILOT-003 requiere, como mínimo, el merge de EXP-010 (Gate 6) y una entrega de cierre de piloto separada, análoga a `docs/PILOT-001-closure-report.md`/`docs/PILOT-002-closure-report.md`, no autorizada todavía.
+
+### 9. Lección obligatoria para PILOT-004
+
+La narrativa de sesión y el código correspondiente deben registrarse **en el mismo commit y en orden cronológico**. Se registra como lección obligatoria, no como sugerencia, porque el mismo tipo de hallazgo ya ocurrió en EXP-007 (H2) y volvió a ocurrir en EXP-010 (H2): una recomendación documentada una sola vez no fue suficiente para evitar la recurrencia. Registrada en `experiments/EXP-010-evaluation.md` §9 y en `docs/results-dashboard.md`.
+
+### Control del alcance de esta entrega
+
+Confirmado:
+
+- se modificaron únicamente `experiments/EXP-010-evaluation.md`, `experiments/EXP-010-session-log.md` (este registro), `experiments/EXP-010-TB-14.md` y `docs/results-dashboard.md`;
+- no se modificó código productivo ni pruebas;
+- no se modificó `experiments/EXP-010-independent-review.md` (el hallazgo H2 permanece descrito allí sin cambios; solo su estado de aceptación se registra en los cuatro archivos autorizados);
+- no se abrió pull request;
+- no se fusionó nada;
+- no se eliminó la rama desechable `pilot-003/exp-010-reversal-test`;
+- no se creó commit.
+
+## Estado de salida final de EXP-010 (esta sesión)
+
+- Gates 0 a 5: completados.
+- Gate 6: pendiente de autorización humana (PR y merge).
+- H2: aceptado como excepción documentada. H7, H8, H9: observaciones pendientes para VS-02.
+- EXP-010: cerrado técnicamente, no integrado.
+- PILOT-003: abierto.
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (registro acumulado de EXP-010)
+
+- H2 — aceptada como excepción documentada por Hugo Cornejo Villena, 19 de julio de 2026 (detalle completo en `experiments/EXP-010-evaluation.md` §8).
