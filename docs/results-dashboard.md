@@ -158,7 +158,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 
 - Fecha de inicialización: 19 de julio de 2026
 - Estado del piloto: EXP-008 ejecutado y evaluado
-- Gate: P3-2 pendiente de cierre humano
+- Gate: P3-2 cerrado
 - Experimentos planificados: EXP-008, EXP-009 y EXP-010
 - Experimentos ejecutados: 1
 - Experimentos evaluados: 1
@@ -168,7 +168,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 
 | ID | Tarea | Componente evaluado | Ruta | Control | Estado | Puntuación | Decisión |
 |---|---|---|---|---|---|---:|---|
-| EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | evaluado | 47/50 | Pendiente de aprobación humana |
+| EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | cerrado | 47/50 | Aprobado |
 | EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | bloqueado por EXP-008 | — | Pendiente |
 | EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | bloqueado por EXP-009 | — | Pendiente |
 
@@ -185,4 +185,4 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
   - `experiments/EXP-008-session-log.md`
   - `experiments/EXP-008-evaluation.md`
 - Observación metodológica: la sesión fue trazable, pero excesivamente fragmentada en microdecisiones; EXP-009 deberá trabajar mediante bloques de decisiones.
-- Estado final: pendiente de aprobación humana y merge.
+- Estado final: aprobado; pendiente de integración mediante pull request.
