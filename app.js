@@ -1,5 +1,26 @@
 const STORAGE_KEY = 'tasks';
 const TASK_TITLE_ERROR_MESSAGE = 'Escribe un título para la tarea.';
+const TASK_PRIORITY_ERROR_MESSAGE = 'Selecciona una prioridad válida (Baja, Media o Alta).';
+
+const VALID_PRIORITIES = ['low', 'medium', 'high'];
+const DEFAULT_PRIORITY = 'medium';
+const PRIORITY_LABELS = { low: 'Baja', medium: 'Media', high: 'Alta' };
+
+function isValidPriority(priority) {
+  return VALID_PRIORITIES.indexOf(priority) !== -1;
+}
+
+function normalizePriority(priority) {
+  return isValidPriority(priority) ? priority : DEFAULT_PRIORITY;
+}
+
+function normalizeTask(task) {
+  return Object.assign({}, task, { priority: normalizePriority(task.priority) });
+}
+
+function getPriorityLabel(priority) {
+  return PRIORITY_LABELS[priority] || PRIORITY_LABELS[DEFAULT_PRIORITY];
+}
 
 function loadTasks() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -9,7 +30,8 @@ function loadTasks() {
   }
 
   try {
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return parsed.map(normalizeTask);
   } catch (error) {
     saveTasks([]);
     return [];
@@ -33,8 +55,11 @@ function formatDueDate(dueDate) {
   return day + '/' + month + '/' + year;
 }
 
-function createTask(title, dueDate) {
+function createTask(title, dueDate, priority) {
   if (!isValidTitle(title)) {
+    return null;
+  }
+  if (priority !== undefined && !isValidPriority(priority)) {
     return null;
   }
   const tasks = loadTasks();
@@ -42,20 +67,21 @@ function createTask(title, dueDate) {
     id: Date.now().toString(),
     title: title,
     completed: false,
-    dueDate: isValidDueDate(dueDate) ? dueDate : ''
+    dueDate: isValidDueDate(dueDate) ? dueDate : '',
+    priority: priority === undefined ? DEFAULT_PRIORITY : priority
   };
   tasks.push(task);
   saveTasks(tasks);
   return task;
 }
 
-function showTitleError(el) {
+function showFieldError(el, message) {
   if (!el) return;
-  el.textContent = TASK_TITLE_ERROR_MESSAGE;
+  el.textContent = message;
   el.hidden = false;
 }
 
-function hideTitleError(el) {
+function hideFieldError(el) {
   if (!el) return;
   el.hidden = true;
 }
@@ -143,6 +169,11 @@ function renderReadRow(li, task, listElement) {
     dueDateSpan.textContent = 'Fecha límite: ' + formatDueDate(dueDate);
     info.appendChild(dueDateSpan);
   }
+
+  const prioritySpan = document.createElement('span');
+  prioritySpan.className = 'priority-label';
+  prioritySpan.textContent = 'Prioridad: ' + getPriorityLabel(task.priority);
+  info.appendChild(prioritySpan);
 
   li.appendChild(info);
 
@@ -251,22 +282,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('task-form');
   const input = document.getElementById('task-title');
   const dueDateInput = document.getElementById('task-due-date');
+  const priorityInput = document.getElementById('task-priority');
   const list = document.getElementById('task-list');
   const errorMessage = document.getElementById('task-error');
+  const priorityErrorMessage = document.getElementById('task-priority-error');
 
   if (form && input && list) {
     renderTasks(list);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const created = createTask(input.value, dueDateInput ? dueDateInput.value : '');
+      const priorityValue = priorityInput ? priorityInput.value : undefined;
+      const created = createTask(input.value, dueDateInput ? dueDateInput.value : '', priorityValue);
       if (!created) {
-        showTitleError(errorMessage);
+        if (!isValidTitle(input.value)) {
+          showFieldError(errorMessage, TASK_TITLE_ERROR_MESSAGE);
+          hideFieldError(priorityErrorMessage);
+        } else {
+          hideFieldError(errorMessage);
+          showFieldError(priorityErrorMessage, TASK_PRIORITY_ERROR_MESSAGE);
+        }
         return;
       }
-      hideTitleError(errorMessage);
+      hideFieldError(errorMessage);
+      hideFieldError(priorityErrorMessage);
       input.value = '';
       if (dueDateInput) {
         dueDateInput.value = '';
+      }
+      if (priorityInput) {
+        priorityInput.value = DEFAULT_PRIORITY;
       }
       renderTasks(list);
     });

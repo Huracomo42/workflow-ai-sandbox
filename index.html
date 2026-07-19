@@ -11,10 +11,16 @@
   <form id="task-form">
     <input type="text" id="task-title" placeholder="Título de la tarea">
     <input type="date" id="task-due-date">
+    <select id="task-priority">
+      <option value="low">Baja</option>
+      <option value="medium" selected>Media</option>
+      <option value="high">Alta</option>
+    </select>
     <button type="submit">Agregar tarea</button>
   </form>
 
   <p id="task-error" class="error-message" hidden></p>
+  <p id="task-priority-error" class="error-message" hidden></p>
 
   <ul id="task-list"></ul>
 

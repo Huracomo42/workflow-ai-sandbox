@@ -20,6 +20,10 @@ input[type="text"] {
   padding: 0.4rem;
 }
 
+select#task-priority {
+  padding: 0.4rem;
+}
+
 button {
   padding: 0.4rem 0.8rem;
 }
@@ -48,6 +52,11 @@ ul#task-list li {
 }
 
 .due-date {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.priority-label {
   font-size: 0.85rem;
   color: #555;
 }
