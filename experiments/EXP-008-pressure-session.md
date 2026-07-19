@@ -196,3 +196,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: reducir fricción y mantener un comportamiento directo y predecible.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 17 — Conservación de filtros tras guardar
+
+- Fecha: 19 de julio de 2026
+- Decisión: al crear o editar una tarea, los filtros activos de estado y prioridad se conservarán después del guardado.
+- Comportamiento: la lista se volverá a evaluar con los mismos filtros y mostrará el resultado correspondiente.
+- Motivo: preservar el contexto del usuario y evitar restablecimientos inesperados.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
