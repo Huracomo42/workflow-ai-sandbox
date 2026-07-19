@@ -213,3 +213,42 @@ Definir tareas controladas y repetibles para validar el workflow profesional de 
 6. TB-10 — Reversión de cambios.
 
 Las demás tareas se utilizarán en ciclos posteriores, cuando el workflow básico haya demostrado estabilidad.
+
+## TB-14 — Priorización y filtrado de tareas
+
+* Piloto: PILOT-003
+* Experimentos asociados: EXP-008, EXP-009 y EXP-010
+* Ruta:
+  * EXP-008: exploratoria;
+  * EXP-009 y EXP-010: estándar.
+* Nivel de control:
+  * EXP-008: medio;
+  * EXP-009 y EXP-010: alto.
+* Objetivo: permitir que cada tarea tenga una prioridad controlada y que el usuario pueda filtrar la lista por prioridad y estado, preservando la compatibilidad con los datos existentes.
+* Resultado esperado:
+  * asignar una prioridad válida al crear o editar una tarea;
+  * visualizar la prioridad;
+  * filtrar tareas por prioridad;
+  * combinar prioridad con estado pendiente o completado;
+  * mantener compatibilidad con tareas creadas antes del nuevo campo.
+* Capacidades evaluadas:
+  * presión y congelamiento de requisitos;
+  * modelado del dominio;
+  * definición de reglas e invariantes;
+  * especificación funcional verificable;
+  * diseño modular;
+  * división en vertical slices;
+  * trazabilidad entre requisitos, criterios, pruebas y cambios;
+  * implementación controlada;
+  * pruebas de regresión;
+  * revisión técnica independiente;
+  * reversión ensayada.
+* Restricciones:
+  * prioridades permitidas: baja, media y alta;
+  * no permitir prioridades personalizadas;
+  * no incorporar dependencias ni frameworks;
+  * no cambiar el sistema de identificación de tareas;
+  * no implementar etiquetas, categorías, búsqueda textual ni ordenamiento automático;
+  * los filtros no pueden modificar ni eliminar datos;
+  * el comportamiento de tareas antiguas será decidido y congelado en EXP-008.
+* Regla de ejecución: EXP-008, EXP-009 y EXP-010 deben cerrarse secuencialmente. No se permite iniciar un experimento sin aprobar el anterior.
