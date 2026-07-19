@@ -4,7 +4,7 @@
 - Experimento: EXP-008
 - Tarea: TB-14 — Priorización y filtrado de tareas
 - Fecha real de evaluación: 19 de julio de 2026
-- Estado: evaluado, pendiente de cierre humano
+- Estado: aprobado y cerrado
 - Umbral: 40/50
 - Mínimos obligatorios:
   - comprensión del problema ≥ 4/5;
@@ -54,4 +54,4 @@ No se activó ninguna regla de bloqueo.
 
 El experimento cumplió sus criterios de aceptación, preservó la separación entre requisitos y diseño técnico, no modificó código y dejó requisitos congelados suficientemente completos para iniciar EXP-009.
 
-La aprobación final corresponde a Hugo Cornejo Villena y debe registrarse antes de autorizar EXP-009.
+La aprobación final fue otorgada por Hugo Cornejo Villena el 19 de julio de 2026. EXP-009 requiere una autorización separada en el Gate P3-3.

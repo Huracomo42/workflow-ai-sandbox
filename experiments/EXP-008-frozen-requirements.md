@@ -5,7 +5,7 @@
 - Tarea: TB-14 — Priorización y filtrado de tareas
 - Fecha real de congelamiento: 19 de julio de 2026
 - Versión: 1.0
-- Estado: congelado, pendiente de evaluación y cierre
+- Estado: congelado y aprobado
 - Responsable de aprobación: Hugo Cornejo Villena
 
 ## 1. Propósito funcional

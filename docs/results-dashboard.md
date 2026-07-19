@@ -169,7 +169,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 | ID | Tarea | Componente evaluado | Ruta | Control | Estado | Puntuación | Decisión |
 |---|---|---|---|---|---|---:|---|
 | EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | cerrado | 47/50 | Aprobado |
-| EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | bloqueado por EXP-008 | — | Pendiente |
+| EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | pendiente de autorización P3-3 | — | Pendiente |
 | EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | bloqueado por EXP-009 | — | Pendiente |
 
 ### Resultado de EXP-008

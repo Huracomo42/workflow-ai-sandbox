@@ -2,7 +2,7 @@
 
 - Fecha de creación: 19 de julio de 2026
 - Fecha de ejecución: 19 de julio de 2026
-- Estado: ejecutado y evaluado, pendiente de cierre humano
+- Estado: cerrado y aprobado
 - Rama: `pilot-003/exp-008-requirements`
 - Código de aplicación modificado: no
 - Pruebas modificadas: no
@@ -64,8 +64,8 @@ Los hashes intermedios de decisiones se conservan en el historial Git de la rama
 | Gate 1 — autorización humana | Cerrado | 19/07/2026 | Commit `a0d5431`. |
 | Gate 2 — preguntas y decisiones completadas | Cerrado | 19/07/2026 | `EXP-008-pressure-session.md`; 24 decisiones funcionales y 1 diferida. |
 | Gate 3 — requisitos congelados | Cerrado | 19/07/2026 | Commit `048967e`; `EXP-008-frozen-requirements.md`. |
-| Gate 4 — evaluación y dashboard | Parcial | 19/07/2026 | Evaluación preparada; dashboard aún pendiente de actualización. |
-| Gate 5 — cierre humano | Pendiente | — | Requiere aprobación explícita de Hugo Cornejo Villena. |
+| Gate 4 — evaluación y dashboard | Cerrado | 19/07/2026 | Evaluación versionada y dashboard actualizado en el commit `d6c0d5d`. |
+| Gate 5 — cierre humano | Cerrado | 19/07/2026 | Aprobación registrada en el commit `6de8fda`. |
 
 ## 7. Evaluación
 
