@@ -82,3 +82,16 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: permitir combinaciones claras sin obligar a restablecer ambos filtros.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 5 — Efecto no destructivo de los filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: los filtros afectarán únicamente la visualización de la lista.
+- Restricciones:
+  - no modificarán datos;
+  - no eliminarán tareas;
+  - no cambiarán el orden persistido;
+  - no alterarán `localStorage`.
+- Motivo: separar claramente filtrado y persistencia, evitando efectos laterales.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
