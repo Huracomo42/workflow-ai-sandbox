@@ -8,7 +8,7 @@
 * **Proyecto candidato:** aplicación local de seguimiento de cobranzas
 * **Repositorio de ejecución:** nuevo repositorio, todavía no creado
 * **Repositorio metodológico de origen:** `Huracomo42/workflow-ai-sandbox`
-* **Estado:** paquete operativo en preparación
+* **Estado:** aprobado para incorporación al repositorio metodológico
 * **Inicio de implementación:** no autorizado
 * **Ruta general:** estándar
 * **Nivel de control general:** alto
@@ -275,8 +275,8 @@ La siguiente numeración será la única fuente válida durante PILOT-004.
 ### Preparación
 
 * **P4-0:** alcance y criterio de éxito aprobados — cerrado.
-* **P4-1:** paquete operativo conceptual aprobado.
-* **P4-2:** paquete operativo incorporado al repositorio metodológico.
+* **P4-1:** paquete operativo conceptual aprobado — cerrado.
+* **P4-2:** paquete operativo incorporado al repositorio metodológico — en curso.
 * **P4-3:** creación del nuevo repositorio autorizada.
 * **P4-4:** workflow incorporado y verificado en el nuevo repositorio.
 
