@@ -135,6 +135,8 @@ Estado temporal previsto:
 - `experiments/EXP-009-modular-design.md`
 - `experiments/EXP-009-vertical-slice-map.md`
 - `experiments/EXP-009-traceability-matrix.md`
+- `experiments/EXP-009-current-system-analysis.md`
+- `experiments/EXP-009-test-design.md`
 
 ## 7. Vertical slices definidas
 
