@@ -174,12 +174,23 @@ El ensayo se realizó íntegramente en una rama desechable, sin afectar la rama 
 
 ## 13. Evaluación preliminar
 
-_(pendiente de revisión técnica independiente, conforme a la separación de contextos exigida por el nivel de control alto — sección 12 de la ficha)_
+Revisión técnica independiente y evaluación mediante rúbrica completadas y registradas en artefactos separados: `experiments/EXP-007-independent-review.md` y `experiments/EXP-007-evaluation.md`. Puntuación final: 44/50 (umbral de control alto: 42/50, con seguridad ≥4, pruebas ≥4, reversión ≥4 y trazabilidad ≥4 cumplidos). Sin reglas de bloqueo activadas.
+
+_Nota de regularización documental (18 de julio de 2026): esta sección fue completada con posterioridad al merge del pull request #9, como parte de la regularización documental de PILOT-002. Los artefactos referenciados reconstruyen fielmente la revisión y la evaluación efectivamente realizadas antes de dicho merge; no se presentan como si hubieran existido como archivos independientes en esa fecha._
 
 ## 14. Decisión
 
-Pendiente. Esta sesión corresponde únicamente al contexto de implementación (Gate 2). La decisión de aprobación requiere Gates 3 y 4 (revisión independiente y rúbrica), que no corresponden a este contexto.
+Aprobado. Gates 3, 4 y 5 quedaron satisfechos (ver sección 16). El responsable humano aprobó explícitamente el merge dentro de la sesión operativa del workflow, fuera de este repositorio; el pull request #9 fue integrado a `main` mediante el commit `ac3a479`, que corrobora que esa integración se ejecutó, pero no sustituye por sí solo la evidencia de la aprobación.
 
 ## 15. Próximo paso
 
-Cerrar este contexto de implementación y abrir un contexto separado e independiente para la revisión técnica exigida por el nivel de control alto (Gate 3), sin commit previo de esta sesión.
+Ninguno pendiente para EXP-007. El experimento está cerrado; el siguiente hito corresponde al cierre formal de PILOT-002 (`docs/PILOT-002-closure-report.md`), sujeto a aprobación separada.
+
+## 16. Cierre de gates (registrado en regularización documental, 18 de julio de 2026)
+
+- **Gate 0 — Documentación previa**: superado. `experiments/EXP-007-TB-13.md` y la entrada TB-13 de `docs/task-bank.md` fueron aprobadas antes de iniciar la implementación.
+- **Gate 1 — Autorización de implementación**: superado. Ver sección 11 (intervención humana).
+- **Gate 2 — Implementación completa**: superado. Ver secciones 7 a 9 (`T007-01` a `T007-09` en PASS, regresión de EXP-005 sin cambios de resultado).
+- **Gate 3 — Revisión técnica independiente**: superado. Evidencia: `experiments/EXP-007-independent-review.md`, que reconstruye la revisión realizada en un contexto separado del de implementación y los hallazgos H1, H2 y H3 ya documentados en la sección 9 de este registro.
+- **Gate 4 — Rúbrica y umbral de control alto**: superado. Evidencia: `experiments/EXP-007-evaluation.md`, puntuación 44/50, con seguridad 5/5, pruebas 4/5, reversión 4/5 y trazabilidad 4/5 — todos por encima de los mínimos exigidos (≥4). Sin reglas de bloqueo activadas.
+- **Gate 5 — Aprobación humana e integración**: superado. La aprobación humana explícita para realizar el merge ocurrió fuera de este repositorio, dentro de la sesión operativa del workflow. El commit `ac3a479` en `main` y el pull request #9 fusionado corroboran que la integración se ejecutó; el merge por sí solo es evidencia de ejecución, no sustituto de esa aprobación.
