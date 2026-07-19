@@ -29,6 +29,19 @@
       .filter((reference) => /^(https?:)?\/\//i.test(reference));
   }
 
+  function findPrioritySelect() {
+    const frameDocument =
+      indexFrame.contentDocument || (indexFrame.contentWindow && indexFrame.contentWindow.document);
+    if (!frameDocument) return null;
+    const form = frameDocument.getElementById('task-form');
+    if (!form) return null;
+    return (
+      Array.from(form.querySelectorAll('select')).find(
+        (select) => /priorit/i.test(select.id) || /priorit/i.test(select.name || '')
+      ) || null
+    );
+  }
+
   function waitForFrame(frame) {
     return new Promise((resolve, reject) => {
       const timeoutId = window.setTimeout(() => {
@@ -469,6 +482,219 @@
     {
       id: 'T007-09',
       name: 'La edición de tareas no añadió referencias externas en index.html (CA-10)',
+      async run() {
+        await waitForFrame(indexFrame);
+        const frameDocument = indexFrame.contentDocument || indexFrame.contentWindow.document;
+        const references = findExternalRefs(frameDocument);
+        assert(references.length === 0, `Referencias externas: ${references.join(', ')}`);
+      }
+    },
+    {
+      id: 'T010-01',
+      name: 'Omitir prioridad en creación usa medium (RF-02)',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea sin prioridad explícita', '');
+        assert(created !== null, 'No se pudo crear la tarea.');
+        assert(
+          created.priority === 'medium',
+          'La prioridad predeterminada no fue medium; VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-02',
+      name: 'Crear con low persiste exactamente low',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea baja', '', 'low');
+        assert(created !== null, 'No se pudo crear la tarea.');
+        assert(created.priority === 'low', 'La prioridad low no se persistió; VS-01 no está implementada todavía.');
+      }
+    },
+    {
+      id: 'T010-03',
+      name: 'Crear con medium persiste exactamente medium',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea media', '', 'medium');
+        assert(created !== null, 'No se pudo crear la tarea.');
+        assert(
+          created.priority === 'medium',
+          'La prioridad medium no se persistió explícitamente; VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-04',
+      name: 'Crear con high persiste exactamente high',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea alta', '', 'high');
+        assert(created !== null, 'No se pudo crear la tarea.');
+        assert(created.priority === 'high', 'La prioridad high no se persistió; VS-01 no está implementada todavía.');
+      }
+    },
+    {
+      id: 'T010-05',
+      name: 'Prioridad explícita inválida rechaza la creación completa (RF-21)',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea con prioridad inválida', '', 'urgentisima');
+        assert(
+          created === null,
+          'Se aceptó una prioridad explícitamente inválida; VS-01 no está implementada todavía.'
+        );
+        assert(loadTasks().length === 0, 'Se persistió una tarea con prioridad inválida.');
+      }
+    },
+    {
+      id: 'T010-06',
+      name: 'Una tarea antigua sin prioridad se normaliza a medium al cargar (RF-01)',
+      ...storageIsolation,
+      run() {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify([{ id: 'old-1', title: 'Tarea antigua', completed: false, dueDate: '' }])
+        );
+        const value = loadTasks();
+        assert(
+          Array.isArray(value) && value.length === 1 && value[0].priority === 'medium',
+          'La tarea antigua sin prioridad no se normalizó a medium; VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-07',
+      name: 'Una tarea con prioridad desconocida se normaliza a medium al cargar (RF-22)',
+      ...storageIsolation,
+      run() {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify([
+            { id: 'unk-1', title: 'Tarea con prioridad rara', completed: false, dueDate: '', priority: 'urgentisima' }
+          ])
+        );
+        const value = loadTasks();
+        assert(
+          Array.isArray(value) && value.length === 1 && value[0].priority === 'medium',
+          'La prioridad desconocida no se normalizó a medium; VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-08',
+      name: 'La normalización de prioridad al cargar no escribe automáticamente en localStorage',
+      ...storageIsolation,
+      run() {
+        const rawBefore = JSON.stringify([
+          { id: 'norm-1', title: 'Tarea a normalizar', completed: false, dueDate: '' }
+        ]);
+        localStorage.setItem(STORAGE_KEY, rawBefore);
+        const value = loadTasks();
+        assert(
+          Array.isArray(value) && value.length === 1 && value[0].priority === 'medium',
+          'La normalización en memoria no ocurrió; VS-01 no está implementada todavía.'
+        );
+        const rawAfter = localStorage.getItem(STORAGE_KEY);
+        assert(rawAfter === rawBefore, 'La normalización escribió automáticamente en localStorage.');
+      }
+    },
+    {
+      id: 'T010-09',
+      name: 'Una tarea con prioridad inválida no bloquea la carga de las demás (RF-22)',
+      ...storageIsolation,
+      run() {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify([
+            { id: 'a', title: 'Tarea antigua sin prioridad', completed: false, dueDate: '' },
+            { id: 'b', title: 'Tarea con prioridad inválida', completed: false, dueDate: '', priority: 'urgentisima' },
+            { id: 'c', title: 'Tarea con prioridad válida', completed: false, dueDate: '', priority: 'high' }
+          ])
+        );
+        const value = loadTasks();
+        assert(value.length === 3, 'La tarea con prioridad inválida bloqueó la carga de las demás.');
+        const invalid = value.find((task) => task.id === 'b');
+        assert(
+          Boolean(invalid) && invalid.priority === 'medium',
+          'La tarea con prioridad inválida no se normalizó a medium al cargar; VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-10',
+      name: 'El selector de creación ofrece exclusivamente Baja, Media y Alta',
+      async run() {
+        await waitForFrame(indexFrame);
+        const prioritySelect = findPrioritySelect();
+        assert(
+          Boolean(prioritySelect),
+          'No existe un selector de prioridad en el formulario de creación (#task-form); VS-01 no está implementada todavía.'
+        );
+        const optionLabels = Array.from(prioritySelect.options).map((option) => option.textContent.trim());
+        assert(
+          optionLabels.length === 3 &&
+            optionLabels.includes('Baja') &&
+            optionLabels.includes('Media') &&
+            optionLabels.includes('Alta'),
+          `Las opciones del selector no son exactamente Baja, Media y Alta (encontradas: ${optionLabels.join(', ') || 'ninguna'}).`
+        );
+      }
+    },
+    {
+      id: 'T010-11',
+      name: 'Media aparece seleccionada inicialmente en el selector de prioridad',
+      skipWhen: () => !findPrioritySelect(),
+      skipReason: 'Depende del selector de prioridad de VS-01 (T010-10), que todavía no existe en index.html.',
+      run() {
+        const prioritySelect = findPrioritySelect();
+        const selectedOption = prioritySelect.options[prioritySelect.selectedIndex];
+        assert(
+          Boolean(selectedOption) && /medium|media/i.test(selectedOption.value + ' ' + selectedOption.textContent),
+          'El valor Media no está seleccionado de forma predeterminada.'
+        );
+      }
+    },
+    {
+      id: 'T010-12',
+      name: 'La prioridad se muestra mediante texto en cada tarea renderizada (RF-04)',
+      ...storageIsolation,
+      run() {
+        const created = createTask('Tarea con etiqueta de prioridad', '');
+        assert(created !== null, 'No se pudo crear la tarea previa.');
+
+        const list = document.createElement('ul');
+        renderTasks(list);
+
+        const rowText = list.textContent;
+        assert(
+          /Baja|Media|Alta/.test(rowText),
+          'El texto renderizado no incluye una etiqueta de prioridad (Baja, Media o Alta); VS-01 no está implementada todavía.'
+        );
+      }
+    },
+    {
+      id: 'T010-13',
+      name: 'La regresión de las suites T005-* y T007-* permanece en PASS',
+      run() {
+        const baseline = results.filter(
+          (result) => result.id.startsWith('T005-') || result.id.startsWith('T007-')
+        );
+        assert(
+          baseline.length > 0,
+          'No se encontraron resultados de la línea base T005-*/T007-* para verificar regresión.'
+        );
+        const failures = baseline.filter((result) => result.status !== STATUS.PASS);
+        assert(
+          failures.length === 0,
+          `Regresión con fallos: ${failures.map((f) => `${f.id} (${f.status})`).join(', ')}`
+        );
+      }
+    },
+    {
+      id: 'T010-14',
+      name: 'La preparación de EXP-010 no añadió referencias externas en index.html',
       async run() {
         await waitForFrame(indexFrame);
         const frameDocument = indexFrame.contentDocument || indexFrame.contentWindow.document;

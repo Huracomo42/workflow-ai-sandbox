@@ -41,7 +41,8 @@ No se modificaron `experiments/EXP-010-independent-review.md`, `experiments/EXP-
 
 ## Commits por gate
 
-Pendiente: esta entrega documental se registrará en un commit dedicado al cierre de la sesión; no se ha creado todavía.
+- Gate 0 (preparación documental, §1-§7 de este registro): commit `d55f645` — "docs: initialize EXP-010 implementation controls", sobre `main` (base `43185f4`).
+- Gate 1 — fase roja (§8-§13 de este registro): cambios en `test-runner.js` todavía sin commit, según instrucción expresa de no crear commit en esta entrega.
 
 ## 5. Control del alcance
 
@@ -59,7 +60,7 @@ Confirmado en esta entrega:
 
 ## Pruebas
 
-Pendiente. T010-01 a T010-14 no se han incorporado ni ejecutado. Conforme al microplan aprobado (`experiments/EXP-010-test-plan.md` §"Prueba roja controlada"), deben incorporarse a `test-runner.js` **antes** del código productivo, ejecutarse una primera vez para documentar su fallo esperado (fase roja, por ausencia real de VS-01) con la regresión `T005-*`/`T007-*` en PASS, y ejecutarse de nuevo tras la implementación para confirmar PASS (fase verde). Ninguna de las dos fases se ha ejecutado todavía; ambas requieren Gate 1.
+Fase roja completada (§8-§13). T010-01 a T010-14 incorporadas en `test-runner.js` y ejecutadas antes de cualquier cambio productivo. Resultado: FAIL/NO EJECUTADO en las pruebas de comportamiento de VS-01 (según lo esperado), regresión `T005-*`/`T007-*` íntegra en PASS. Detalle completo en §9-§11. La fase verde (tras implementar el código productivo) sigue pendiente y requiere una autorización separada de Gate 1 para modificar `app.js`, `index.html` y `styles.css`.
 
 ## CI
 
@@ -86,5 +87,94 @@ Pendiente. El ensayo de reversión (Gate 5) requiere implementación previa y se
 - Preguntas bloqueantes abiertas: 0.
 
 ## Excepciones
+
+Ninguna registrada en la entrega de Gate 0.
+
+---
+
+## 8. Gate 1 — Autorización y ejecución de la fase roja (segunda entrega)
+
+- Fecha de ejecución: 19 de julio de 2026.
+- Instrucción recibida de Hugo Cornejo Villena: "Gate 1 de EXP-010 autorizado exclusivamente para preparar y ejecutar la fase roja."
+- Alcance autorizado: modificar únicamente `test-runner.js` para incorporar T010-01 a T010-14; ejecutar la suite; registrar resultado en este archivo. No autoriza modificar `app.js`, `index.html`, `styles.css`, `tests.html` ni ningún otro artefacto documental, ni crear commit.
+- Commit base de esta entrega: `d55f645` (`main`), resultado del Gate 0 anterior.
+
+## 9. Corrección metodológica: numeración T010-01 a T010-14
+
+Al redactar las pruebas se detectó una divergencia entre las descripciones de T010-10 a T010-14 en `experiments/EXP-010-test-plan.md`/`EXP-010-TB-14.md` (que agrupan "selector + valor predeterminado" en un solo ítem T010-10 y contienen un ítem T010-14 duplicado sobre dependencias externas) y la lista canónica de 14 ítems distintos de `experiments/EXP-009-test-design.md` §6. Se implementó la suite conforme a `experiments/EXP-009-test-design.md` (fuente vinculante explícita de esta entrega), que separa correctamente:
+
+- T010-10: el selector ofrece solo Baja, Media y Alta;
+- T010-11: Media aparece seleccionada inicialmente;
+- T010-12: la prioridad se muestra mediante texto;
+- T010-13: regresión completa;
+- T010-14: ausencia de dependencias externas nuevas.
+
+Los archivos `EXP-010-TB-14.md` y `EXP-010-test-plan.md` no se modificaron en esta entrega (fuera del alcance autorizado); su tabla de T010-10 a T010-14 queda pendiente de alinearse con esta numeración en una entrega documental separada.
+
+## 10. Archivo modificado
+
+- `test-runner.js`: se añadió la función auxiliar `findPrioritySelect()` y los catorce casos T010-01 a T010-14, insertados entre `T007-09` y `T005-CONTROL-ASSERT`. Ningún caso existente (`T005-*`, `T007-*`, `T005-CONTROL-*`, `T005-FINAL`) fue modificado, eliminado ni rebajado en severidad.
+
+## 11. Ejecución
+
+- Servidor: `python -m http.server 8010`, servido desde la raíz del repositorio.
+- Navegador: Microsoft Edge headless, versión 150.0.4078.83.
+- Comando: `msedge --headless --disable-gpu --virtual-time-budget=8000 --dump-dom http://localhost:8010/tests.html`, modo `normal` (sin parámetro `?mode=`), equivalente al mecanismo usado por EXP-005/EXP-006/EXP-007 y por `.github/workflows/tests.yml`.
+- Estado general reportado por el ejecutor: `data-test-status="fail"`, `data-test-general-status="FAIL"` (fase roja: se espera FAIL general porque T010-* aún no tienen implementación).
+- Totales: 37 casos — 23 PASS, 11 FAIL, 3 NO EJECUTADO.
+
+### Resultado de la línea base (regresión)
+
+`T005-01` a `T005-10`, `T007-01` a `T007-09`: **19/19 en PASS**, sin cambios de comportamiento ni de expectativa.
+
+### Resultado individual T010-01 a T010-14
+
+| ID | Estado | Causa |
+|---|---|---|
+| T010-01 | FAIL | `createTask` sin tercer argumento no asigna `priority: "medium"` (no existe el atributo). |
+| T010-02 | FAIL | `createTask(title, dueDate, 'low')` no persiste `priority`; el tercer argumento se ignora. |
+| T010-03 | FAIL | Igual que T010-02, con `'medium'`. |
+| T010-04 | FAIL | Igual que T010-02, con `'high'`. |
+| T010-05 | FAIL | `createTask` no valida el tercer argumento; una prioridad explícitamente inválida no rechaza la creación. |
+| T010-06 | FAIL | `loadTasks()` no normaliza una tarea antigua sin `priority` a `medium`. |
+| T010-07 | FAIL | `loadTasks()` no normaliza una prioridad desconocida a `medium`. |
+| T010-08 | FAIL | Falla en la primera aserción (normalización en memoria ausente); la ausencia de escritura automática no llegó a evaluarse de forma independiente porque la normalización previa ya falta. |
+| T010-09 | FAIL | Las tres tareas cargan sin bloquearse (eso ya funciona hoy), pero la tarea con prioridad inválida no se normaliza a `medium`. |
+| T010-10 | FAIL | No existe ningún `<select>` de prioridad dentro de `#task-form` en `index.html`. |
+| T010-11 | NO EJECUTADO | `skipWhen` detecta que el selector de prioridad (prerrequisito de T010-10) no existe; se clasifica como dependencia no satisfecha, no como fallo. |
+| T010-12 | FAIL | El texto renderizado de cada tarea no contiene ninguna etiqueta Baja/Media/Alta. |
+| T010-13 | PASS | Es una prueba de regresión, no una prueba de comportamiento de VS-01: verifica en tiempo de ejecución que ningún resultado `T005-*`/`T007-*` sea distinto de PASS. Como VS-01 todavía no altera `app.js`, la regresión se mantiene intacta y esta prueba pasa legítimamente, tanto ahora como después de implementar VS-01. |
+| T010-14 | PASS | Es un control de ausencia de dependencias externas nuevas (idéntico en técnica a T005-10/T007-09), no una prueba de comportamiento de VS-01: como `index.html` no se modificó en esta entrega, no hay referencias externas que detectar. Pasa legítimamente ahora y debe seguir en PASS después de implementar VS-01 (CA-VS01-12).
+
+**Nota de validez de la fase roja:** de las 14 pruebas nuevas, 12 son pruebas de comportamiento de VS-01 (T010-01 a T010-12) y las 14 fallan o quedan no ejecutadas exclusivamente por la ausencia de VS-01, tal como exige la condición de validez. T010-13 y T010-14 son, por diseño, pruebas de control/regresión (no de comportamiento de VS-01): verifican que nada se haya roto ni se haya añadido, una condición que debe cumplirse tanto antes como después de implementar VS-01. Que ambas pasen ya en esta fase no es un falso positivo de la fase roja: no había ninguna forma correcta de diseñarlas para que fallen sin comprometer su propio propósito de control. Se documenta explícitamente esta distinción para que quede sujeta a revisión.
+
+## 12. Confirmación de ausencia de fallos heredados o del ejecutor
+
+- Ningún caso `T005-*`, `T007-*`, `T005-CONTROL-*` ni `T005-FINAL` cambió de estado respecto de su comportamiento esperado.
+- El ejecutor completó su ciclo normalmente (`data-test-status` presente, sin excepción no controlada fuera de los casos `try/catch` de `runCase`); no hubo un fallo crítico del ejecutor (`FAIL crítico del ejecutor`, mensaje que no apareció).
+- Cada fallo nuevo quedó identificado por ID y causa (§11).
+- Conclusión: la fase roja es **válida** conforme a los criterios de la instrucción, con la salvedad documentada en §11 sobre T010-13/T010-14.
+
+## 13. Control del alcance de esta entrega
+
+Confirmado:
+
+- se modificó únicamente `test-runner.js`;
+- no se modificó `app.js`;
+- no se modificó `index.html`;
+- no se modificó `styles.css`;
+- no se modificó `tests.html`;
+- no se modificó ningún otro artefacto documental (`EXP-010-TB-14.md`, `EXP-010-implementation-plan.md`, `EXP-010-test-plan.md`, `EXP-010-independent-review.md`, `EXP-010-reversal-test.md`, `EXP-010-evaluation.md`), salvo este registro;
+- no se implementó ninguna solución productiva;
+- no se creó commit.
+
+## 14. Estado de salida tras Gate 1 (fase roja)
+
+- Fase roja: completada y válida.
+- Fase verde (implementación productiva): no autorizada todavía.
+- Código productivo modificado: no. Pruebas ejecutables modificadas: sí (`test-runner.js` únicamente).
+- Preguntas bloqueantes abiertas: 0.
+
+## Excepciones (Gate 1)
 
 Ninguna registrada.
