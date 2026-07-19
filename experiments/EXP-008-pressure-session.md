@@ -95,3 +95,11 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: separar claramente filtrado y persistencia, evitando efectos laterales.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 6 — Edición de prioridad en tareas completadas
+
+- Fecha: 19 de julio de 2026
+- Decisión: la prioridad podrá modificarse tanto en tareas pendientes como completadas.
+- Motivo: el estado de completitud no bloquea la corrección o actualización de metadatos.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
