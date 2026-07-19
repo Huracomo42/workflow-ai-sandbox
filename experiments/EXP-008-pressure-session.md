@@ -112,3 +112,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: preservar disponibilidad y compatibilidad ante datos defectuosos.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 8 — Persistencia de filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: los filtros de estado y prioridad no se persistirán en `localStorage`.
+- Comportamiento: al recargar la página, ambos filtros volverán a `Todas`.
+- Motivo: evitar estado adicional innecesario y mantener el alcance del piloto controlado.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
