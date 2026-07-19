@@ -275,13 +275,19 @@ validar nuevo filtro
 → renderizar vista derivada
 ```
 
-### Completar tarea
+### Cambiar estado de una tarea
+
+La operación recomendada es `toggleTaskCompletion(id)` o equivalente.
 
 ```text
-actualizar completed
+localizar tarea existente
+→ invertir completed
+→ permitir Pendiente → Completada
+→ permitir Completada → Pendiente
+→ conservar id, título, fecha, prioridad y posición
 → persistir
 → conservar filtros
-→ reevaluar tarea
+→ reevaluar visibilidad
 → renderizar vista derivada
 ```
 
