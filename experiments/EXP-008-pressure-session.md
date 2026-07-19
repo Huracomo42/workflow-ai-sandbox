@@ -260,3 +260,15 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: distinguir entre ausencia real de datos y ausencia de coincidencias por filtros.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 24 — Restablecimiento de la vista completa
+
+- Fecha: 19 de julio de 2026
+- Decisión: al seleccionar `Todas` en los filtros de estado y prioridad, la aplicación mostrará nuevamente todas las tareas.
+- Comportamiento:
+  - no requerirá recargar la página;
+  - conservará el orden actual de las tareas;
+  - no modificará los datos persistidos.
+- Motivo: permitir restablecer la vista completa de forma inmediata y no destructiva.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
