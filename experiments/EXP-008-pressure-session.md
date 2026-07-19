@@ -121,3 +121,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: evitar estado adicional innecesario y mantener el alcance del piloto controlado.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 9 — Estado vacío por filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: cuando una combinación de filtros no produzca resultados, la interfaz mostrará el mensaje `No hay tareas que coincidan con los filtros seleccionados`.
+- Distinción: este estado no debe confundirse con una aplicación sin tareas registradas.
+- Motivo: hacer visible que existen tareas ocultas por los filtros activos.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
