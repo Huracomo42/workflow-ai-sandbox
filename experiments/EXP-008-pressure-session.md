@@ -148,3 +148,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener separado el concepto de prioridad del orden de visualización y respetar el alcance aprobado.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 12 — Cancelación de cambios de prioridad
+
+- Fecha: 19 de julio de 2026
+- Decisión: cancelar la edición descartará cualquier cambio de prioridad no guardado.
+- Comportamiento: la tarea conservará la prioridad que tenía antes de iniciar la edición.
+- Motivo: mantener la edición como borrador temporal y evitar persistencia prematura.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
