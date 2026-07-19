@@ -251,3 +251,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener consistencia inmediata entre el estado real de la tarea y la lista filtrada.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 23 — Estado vacío sin tareas registradas
+
+- Fecha: 19 de julio de 2026
+- Decisión: cuando no existan tareas registradas, la interfaz mostrará el mensaje `No hay tareas registradas`.
+- Distinción: este mensaje será diferente de `No hay tareas que coincidan con los filtros seleccionados`.
+- Motivo: distinguir entre ausencia real de datos y ausencia de coincidencias por filtros.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
