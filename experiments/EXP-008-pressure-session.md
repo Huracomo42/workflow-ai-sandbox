@@ -72,3 +72,13 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: asegurar resultados previsibles, precisos y verificables cuando ambos filtros estén activos.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 4 — Opción “Todas” en filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: los filtros de estado y prioridad incluirán una opción `Todas`.
+- Comportamiento: seleccionar `Todas` desactiva únicamente ese filtro y conserva el otro filtro activo.
+- Ejemplo: `estado = Todas` y `prioridad = alta` mostrará todas las tareas de prioridad alta, sin importar su estado.
+- Motivo: permitir combinaciones claras sin obligar a restablecer ambos filtros.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
