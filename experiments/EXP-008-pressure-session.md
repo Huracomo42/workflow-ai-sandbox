@@ -47,3 +47,11 @@ Pendiente.
 ## 11. Preguntas abiertas
 
 Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
+
+## Decisión funcional 1 — Compatibilidad con tareas antiguas
+
+- Fecha: 19 de julio de 2026
+- Decisión: toda tarea cargada sin campo `priority` será tratada como prioridad `media`.
+- Motivo: mantener un valor neutral, evitar clasificar artificialmente tareas antiguas como urgentes o irrelevantes y preservar compatibilidad.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
