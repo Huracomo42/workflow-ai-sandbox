@@ -63,3 +63,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: evitar estados sin prioridad y mantener coherencia con las tareas antiguas.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 3 — Combinación de filtros
+
+- Fecha: 19 de julio de 2026
+- Decisión: los filtros de estado y prioridad se combinarán mediante lógica `AND`.
+- Ejemplo: el filtro `pendientes + alta` mostrará únicamente tareas pendientes con prioridad `alta`.
+- Motivo: asegurar resultados previsibles, precisos y verificables cuando ambos filtros estén activos.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
