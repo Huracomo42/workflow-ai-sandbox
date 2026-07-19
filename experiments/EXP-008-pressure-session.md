@@ -214,3 +214,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener coherencia entre los datos actualizados y los filtros vigentes.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 19 — Creación bajo filtros activos
+
+- Fecha: 19 de julio de 2026
+- Decisión: una tarea nueva se guardará correctamente aunque no coincida con los filtros activos.
+- Comportamiento: si no cumple los filtros vigentes, no aparecerá en la vista actual.
+- Motivo: mantener separados el guardado de datos y la visualización filtrada.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
