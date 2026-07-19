@@ -103,3 +103,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: el estado de completitud no bloquea la corrección o actualización de metadatos.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 7 — Recuperación ante prioridad inválida
+
+- Fecha: 19 de julio de 2026
+- Decisión: si una tarea contiene un valor de prioridad inválido o desconocido en `localStorage`, se tratará como prioridad `media`.
+- Comportamiento: la tarea seguirá cargándose y no bloqueará la carga de las demás.
+- Motivo: preservar disponibilidad y compatibilidad ante datos defectuosos.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
