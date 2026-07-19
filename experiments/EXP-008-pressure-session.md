@@ -242,3 +242,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: evitar una categoría incompatible con las reglas de normalización ya aprobadas.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 22 — Reevaluación tras cambiar el estado
+
+- Fecha: 19 de julio de 2026
+- Decisión: al marcar o desmarcar una tarea como completada, la tarea será reevaluada inmediatamente contra los filtros activos.
+- Comportamiento: si deja de coincidir con el filtro de estado o con la combinación vigente de filtros, desaparecerá de la vista actual.
+- Motivo: mantener consistencia inmediata entre el estado real de la tarea y la lista filtrada.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
