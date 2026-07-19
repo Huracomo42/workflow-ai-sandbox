@@ -178,3 +178,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener consistencia atómica entre creación y edición.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión diferida 15 — Representación interna de prioridad
+
+- Fecha: 19 de julio de 2026
+- Preferencia considerada: representar internamente las prioridades como `low`, `medium` y `high`.
+- Decisión metodológica: no se congela en EXP-008 porque corresponde al diseño técnico.
+- Requisito funcional vigente: la interfaz mostrará `Baja`, `Media` y `Alta`.
+- Próxima evaluación: EXP-009, durante el modelo de dominio y diseño modular.
+- Autoriza el diferimiento: Hugo Cornejo Villena.
