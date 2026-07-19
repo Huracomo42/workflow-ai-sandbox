@@ -157,12 +157,13 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 ## PILOT-003 — Inicialización previa a ejecución
 
 - Fecha de inicialización: 19 de julio de 2026
-- Estado del piloto: EXP-008 y EXP-009 cerrados; EXP-010 cerrado técnicamente (Gates 0-5 completados, H2 aceptado como excepción documentada), pendiente de Gate 6 (aprobación humana e integración) para su integración a `main`; PILOT-003 continúa abierto
-- Gate: P3-3 cerrado; Gates internos de EXP-010 (0-5) completados; Gate 6 pendiente
+- Fecha de cierre formal: 19 de julio de 2026 (`docs/PILOT-003-closure-report.md`)
+- Estado del piloto: **cerrado — aprobado con restricciones**. EXP-008, EXP-009 y EXP-010 cerrados, aprobados e integrados a `main` mediante pull requests #12, #13 y #14 respectivamente.
+- Gate: P3-3 cerrado; Gates internos de EXP-010 (0-6) completados; PR #14 fusionado (commit de merge `aa89057`)
 - Experimentos ejecutados: 3
 - Experimentos evaluados: 3
 - Experimentos planificados: EXP-008, EXP-009 y EXP-010
-- Código modificado: sí (EXP-010, VS-01 — `app.js`, `index.html`, `styles.css`, `test-runner.js`, sobre la rama `pilot-003/exp-010-priority-base`; no fusionado a `main`)
+- Código modificado: sí (EXP-010, VS-01 — `app.js`, `index.html`, `styles.css`, `test-runner.js`), fusionado a `main` mediante PR #14
 - Paquete operativo: aprobado e incorporado en rama documental
 - Regla de actualización: este tablero deberá actualizarse al cierre real de cada experimento, conforme al Ajuste H.
 
@@ -170,7 +171,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 |---|---|---|---|---|---|---:|---|
 | EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | cerrado | 47/50 | Aprobado |
 | EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | cerrado | 48/50 | Aprobado |
-| EXP-010 | TB-14 | Implementación de VS-01 (prioridad base y compatibilidad) | estándar | alto | cerrado técnicamente; pendiente de Gate 6 | 42/50 | Aprobado, incorporar con restricciones |
+| EXP-010 | TB-14 | Implementación de VS-01 (prioridad base y compatibilidad) | estándar | alto | cerrado; integrado a `main` (PR #14) | 42/50 | Aprobado, con restricciones |
 
 ### Resultado de EXP-008
 
@@ -225,7 +226,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 - Hallazgos no bloqueantes pendientes: H7, H8, H9 (observaciones para VS-02)
 - Lección obligatoria registrada para PILOT-004: la narrativa de sesión y el código correspondiente deben registrarse en el mismo commit y en orden cronológico (recurrencia del mismo tipo de hallazgo que H2 de EXP-007; ver `experiments/EXP-010-evaluation.md` §9).
 - Ensayo de reversión: ejecutado y exitoso — 6 commits revertidos y 6 reaplicados mediante `git revert` exclusivamente, 0 conflictos en 12/12 operaciones, árbol y suite verificados idénticos en ambos extremos (23/21/0/2 tras revertir; 39/37/0/2 tras restaurar), en la rama desechable `pilot-003/exp-010-reversal-test` (conservada, no fusionada)
-- Código o pruebas ejecutables modificados: sí — `app.js`, `index.html`, `styles.css`, `test-runner.js`, sobre la rama `pilot-003/exp-010-priority-base`; `main` no modificado
+- Código o pruebas ejecutables modificados: sí — `app.js`, `index.html`, `styles.css`, `test-runner.js`, fusionados a `main` mediante pull request #14 (commit de merge `aa89057`)
 - Slice implementada: VS-01 — Prioridad base y compatibilidad (única slice autorizada para EXP-010)
 - Evidencia:
   - `experiments/EXP-010-TB-14.md`
@@ -235,5 +236,20 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
   - `experiments/EXP-010-independent-review.md`
   - `experiments/EXP-010-reversal-test.md`
   - `experiments/EXP-010-evaluation.md`
-- Estado final: **cerrado técnicamente, no integrado todavía**. Gates 0 a 5 completados; Gate 6 (pull request revisado y aprobado por Hugo Cornejo Villena; merge a `main`) pendiente de autorización humana, ya sin condiciones adicionales abiertas (H2 resuelto como excepción). PILOT-003 continúa abierto hasta el merge y el cierre formal del piloto.
+- Estado final: **cerrado e integrado**. Gates 0 a 6 completados; pull request #14 revisado y fusionado a `main` mediante commit de merge `aa89057`.
 - Slices diferidas: VS-02 a VS-06 (edición de prioridad, filtros, coherencia bajo filtros, estados vacíos y regresión integral), según `experiments/EXP-009-vertical-slice-map.md` §11; ninguna quedó implementada en EXP-010.
+
+---
+
+## PILOT-003 — Cierre formal
+
+- Fecha de cierre: 19 de julio de 2026
+- Informe de cierre: `docs/PILOT-003-closure-report.md`
+- Decisión final: **APROBADO CON RESTRICCIONES**
+- Experimentos: EXP-008 (47/50), EXP-009 (48/50), EXP-010 (42/50) — los tres aprobados, cero reglas de bloqueo activadas, cero excepciones por artefactos faltantes
+- Excepción documentada: H2 de EXP-010, aceptada conforme a `docs/WORKFLOW-METHODOLOGY-v2.md` §15
+- Rama desechable `pilot-003/exp-010-reversal-test`: conservada, no fusionada, no eliminada
+- Ajustes K a O (`docs/PILOT-003-closure-report.md` §11) — verificación explícita de separación de contexto antes de redactar; correspondencia commit↔narrativa en el mismo commit; numeración de gates fijada contra la ficha técnica; plantillas documentales por nivel de control (reactivación del Ajuste A de PILOT-001, nunca implementado); decisión pendiente sobre independencia de contexto para Gate 4 (rúbrica). Se incorporan como **condiciones de entrada y controles obligatorios de PILOT-004**, validados durante ese mismo piloto — no mediante un experimento aislado previo.
+- VS-02 a VS-06 (TB-14): deuda funcional diferida, fuera del camino crítico hacia PILOT-004.
+- Conclusión estratégica: el workflow está listo para una validación end-to-end controlada; continuar con experimentos aislados produciría rendimientos decrecientes y no resolvería el principal vacío pendiente (la experiencia completa de iniciar, instalar, operar y cerrar un proyecto nuevo desde una idea vaga).
+- **PILOT-004: no iniciado.** Ningún paquete operativo, banco de tareas ni experimento fue creado para PILOT-004 en este cierre; su inicio requiere un paquete operativo que incorpore las nueve condiciones de entrada de `docs/PILOT-003-closure-report.md` §15.
