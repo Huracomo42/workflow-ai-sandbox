@@ -157,11 +157,11 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 ## PILOT-003 — Inicialización previa a ejecución
 
 - Fecha de inicialización: 19 de julio de 2026
-- Estado del piloto: EXP-008 ejecutado y evaluado
-- Gate: P3-2 cerrado
+- Estado del piloto: EXP-008 y EXP-009 cerrados; EXP-010 pendiente
+- Gate: P3-3 cerrado
+- Experimentos ejecutados: 2
+- Experimentos evaluados: 2
 - Experimentos planificados: EXP-008, EXP-009 y EXP-010
-- Experimentos ejecutados: 1
-- Experimentos evaluados: 1
 - Código modificado: no
 - Paquete operativo: aprobado e incorporado en rama documental
 - Regla de actualización: este tablero deberá actualizarse al cierre real de cada experimento, conforme al Ajuste H.
@@ -169,8 +169,8 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 | ID | Tarea | Componente evaluado | Ruta | Control | Estado | Puntuación | Decisión |
 |---|---|---|---|---|---|---:|---|
 | EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | cerrado | 47/50 | Aprobado |
-| EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | pendiente de autorización P3-3 | — | Pendiente |
-| EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | bloqueado por EXP-009 | — | Pendiente |
+| EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | cerrado | 48/50 | Aprobado |
+| EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | pendiente de Gate P3-4 | — | Pendiente |
 
 ### Resultado de EXP-008
 
@@ -186,3 +186,27 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
   - `experiments/EXP-008-evaluation.md`
 - Observación metodológica: la sesión fue trazable, pero excesivamente fragmentada en microdecisiones; EXP-009 deberá trabajar mediante bloques de decisiones.
 - Estado final: aprobado; pendiente de integración mediante pull request.
+
+### Resultado de EXP-009
+
+- Fecha de ejecución y evaluación: 19 de julio de 2026
+- Resultado: aprobado
+- Puntaje: 48/50
+- Revisión independiente: aprobada en segunda revisión
+- Hallazgos bloqueantes iniciales: 2
+- Hallazgos bloqueantes cerrados: 2
+- Preguntas bloqueantes abiertas: 0
+- Código o pruebas ejecutables modificados: no
+- Slice seleccionada para EXP-010: VS-01 — Prioridad base y compatibilidad
+- Evidencia:
+  - `experiments/EXP-009-current-system-analysis.md`
+  - `experiments/EXP-009-domain-model.md`
+  - `experiments/EXP-009-feature-specification.md`
+  - `experiments/EXP-009-modular-design.md`
+  - `experiments/EXP-009-vertical-slice-map.md`
+  - `experiments/EXP-009-test-design.md`
+  - `experiments/EXP-009-traceability-matrix.md`
+  - `experiments/EXP-009-independent-review.md`
+  - `experiments/EXP-009-evaluation.md`
+- Estado final: aprobado y cerrado; pull request autorizado.
+- Restricción vigente: EXP-010 no puede iniciarse sin Gate P3-4 separado.
