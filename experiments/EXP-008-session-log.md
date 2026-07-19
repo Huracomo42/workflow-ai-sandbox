@@ -89,3 +89,13 @@ La sesión fue rigurosa, pero excesivamente fragmentada en microdecisiones indiv
 4. Abrir pull request y verificar CI.
 5. Integrar a `main`.
 6. Solo después solicitar autorización para EXP-009.
+
+## Aprobación humana de cierre
+
+- Gate: P3-2 / Gate 5 de EXP-008
+- Fecha: 19 de julio de 2026
+- Decisión: EXP-008 queda aprobado con 47/50.
+- Excepciones: ninguna.
+- Observación metodológica: EXP-009 deberá reducir la fragmentación y presentar decisiones agrupadas por bloques coherentes.
+- Resultado: autorizado para pasar al cierre documental y pull request.
+- Autoriza: Hugo Cornejo Villena.
