@@ -143,3 +143,99 @@ La segunda revisión podrá recomendar aprobación cuando:
 - existan los dos artefactos faltantes;
 - la trazabilidad deje de declarar cobertura falsa;
 - los cambios queden registrados en un commit posterior, sin reescribir `ee7b32e`.
+
+## 8. Segunda revisión independiente
+
+* Fecha: 19 de julio de 2026
+* Commit revisado: `5334ce3`
+* Commit final incluido en la revisión: `b28d183`
+* Base comparada: `main` (`3d559b7`)
+* Resultado: aprobado con observaciones no bloqueantes
+
+### 8.1. Alcance de la segunda revisión
+
+La segunda revisión verificó específicamente el cierre de los hallazgos H1 y H2 identificados en la revisión inicial.
+
+También se comprobó que:
+
+* no se modificó código productivo;
+* no se modificaron pruebas ejecutables;
+* EXP-010 permanece limitado a VS-01;
+* los cambios se registraron en commits posteriores sin reescribir el commit original `ee7b32e`.
+
+### 8.2. Resolución de H1 — Transición reversible
+
+**Estado: resuelto.**
+
+El diseño ahora cubre expresamente ambas transiciones:
+
+```text
+Pendiente → Completada
+Completada → Pendiente
+```
+
+Se verificó que:
+
+* RF-14 contiene criterios verificables para ambas direcciones;
+* el modelo de dominio define la inversión de `completed`;
+* el diseño modular propone `toggleTaskCompletion(id)` o equivalente;
+* `completeTask(id)` puede conservarse como envoltorio compatible;
+* VS-03 incluye ambas transiciones;
+* la matriz de trazabilidad separa RF-14A y RF-14B;
+* existen pruebas previstas para marcar y desmarcar una tarea;
+* se conserva `id`, prioridad, posición y filtros activos.
+
+### 8.3. Resolución de H2 — Artefactos obligatorios
+
+**Estado: resuelto.**
+
+Se incorporaron los artefactos:
+
+* `experiments/EXP-009-current-system-analysis.md`;
+* `experiments/EXP-009-test-design.md`.
+
+Ambos documentos:
+
+* tienen contenido sustantivo;
+* distinguen diseño de ejecución;
+* no declaran pruebas nuevas como ejecutadas;
+* cubren estructura actual, riesgos, puntos de extensión, aislamiento, datos, regresión y navegador;
+* están enlazados desde `EXP-009-TB-14.md`;
+* están registrados en `EXP-009-session-log.md`.
+
+### 8.4. Evaluación por dimensión
+
+| Dimensión                 | Resultado | Justificación                                           |
+| ------------------------- | --------- | ------------------------------------------------------- |
+| Comprensión funcional     | Cumple    | RF-14 cubre ambas direcciones                           |
+| Trazabilidad              | Cumple    | RF-14A y RF-14B tienen pruebas y evidencia previstas    |
+| Control de alcance        | Cumple    | no se modificó código ni pruebas ejecutables            |
+| Proporcionalidad          | Cumple    | se mantiene un único `app.js` y separación lógica       |
+| Verificabilidad           | Cumple    | existe diseño de pruebas y transición inversa prevista  |
+| Cumplimiento metodológico | Cumple    | los artefactos obligatorios están presentes y enlazados |
+
+### 8.5. Observaciones no bloqueantes vigentes
+
+* Los identificadores de pruebas de slices posteriores continúan siendo provisionales.
+* EXP-010 deberá congelar únicamente las pruebas correspondientes a VS-01.
+* La implementación reversible del estado pertenece a una slice posterior y no debe incorporarse silenciosamente en EXP-010.
+* La compatibilidad de `completeTask(id)` deberá verificarse cuando se implemente la transición reversible.
+
+### 8.6. Decisión de la segunda revisión
+
+**Recomendar aprobación técnica de EXP-009.**
+
+Los hallazgos bloqueantes H1 y H2 están cerrados.
+
+EXP-009 puede pasar a:
+
+1. evaluación final;
+2. actualización de los artefactos de cierre;
+3. autorización de cierre por Hugo Cornejo Villena;
+4. apertura del pull request.
+
+Esta revisión no autoriza todavía:
+
+* iniciar EXP-010;
+* modificar código productivo;
+* integrar la rama en `main` sin completar la evaluación y el gate de cierre.
