@@ -157,12 +157,12 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 ## PILOT-003 — Inicialización previa a ejecución
 
 - Fecha de inicialización: 19 de julio de 2026
-- Estado del piloto: EXP-008 y EXP-009 cerrados; EXP-010 pendiente
-- Gate: P3-3 cerrado
-- Experimentos ejecutados: 2
-- Experimentos evaluados: 2
+- Estado del piloto: EXP-008 y EXP-009 cerrados; EXP-010 cerrado técnicamente (Gates 0-5 completados, H2 aceptado como excepción documentada), pendiente de Gate 6 (aprobación humana e integración) para su integración a `main`; PILOT-003 continúa abierto
+- Gate: P3-3 cerrado; Gates internos de EXP-010 (0-5) completados; Gate 6 pendiente
+- Experimentos ejecutados: 3
+- Experimentos evaluados: 3
 - Experimentos planificados: EXP-008, EXP-009 y EXP-010
-- Código modificado: no
+- Código modificado: sí (EXP-010, VS-01 — `app.js`, `index.html`, `styles.css`, `test-runner.js`, sobre la rama `pilot-003/exp-010-priority-base`; no fusionado a `main`)
 - Paquete operativo: aprobado e incorporado en rama documental
 - Regla de actualización: este tablero deberá actualizarse al cierre real de cada experimento, conforme al Ajuste H.
 
@@ -170,7 +170,7 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
 |---|---|---|---|---|---|---:|---|
 | EXP-008 | TB-14 | Presión y congelamiento de requisitos | exploratoria | medio | cerrado | 47/50 | Aprobado |
 | EXP-009 | TB-14 | Especificación, diseño y vertical slices | estándar | alto | cerrado | 48/50 | Aprobado |
-| EXP-010 | TB-14 | Implementación de vertical slice | estándar | alto | pendiente de Gate P3-4 | — | Pendiente |
+| EXP-010 | TB-14 | Implementación de VS-01 (prioridad base y compatibilidad) | estándar | alto | cerrado técnicamente; pendiente de Gate 6 | 42/50 | Aprobado, incorporar con restricciones |
 
 ### Resultado de EXP-008
 
@@ -209,4 +209,31 @@ EXP-001, EXP-002 y EXP-003 documentaron un procedimiento de reversión pero no l
   - `experiments/EXP-009-independent-review.md`
   - `experiments/EXP-009-evaluation.md`
 - Estado final: aprobado y cerrado; pull request autorizado.
-- Restricción vigente: EXP-010 no puede iniciarse sin Gate P3-4 separado.
+- Restricción vigente: EXP-010 no puede iniciarse sin Gate P3-4 separado. *(Cumplida: ver "Resultado de EXP-010".)*
+
+### Resultado de EXP-010
+
+- Fecha de ejecución y evaluación: 19 de julio de 2026
+- Resultado: **aprobado, con restricciones** (rúbrica: Aprobado; decisión sobre el componente: incorporar con restricciones)
+- Puntaje final: 42/50 (umbral de control alto cumplido en el límite exacto)
+- Mínimos de control alto: seguridad y control 5/5, pruebas 5/5, trazabilidad 4/5, reversión 5/5 (los cuatro cumplen el mínimo de 4/5)
+- Intervención humana (no sumada al total): 3/5
+- Revisión independiente: aprobada, sin hallazgos bloqueantes (primer informe, redactado en el mismo contexto que la implementación, fue inválido y reemplazado íntegramente por una revisión en contexto separado)
+- Hallazgos bloqueantes: 0
+- Hallazgos no bloqueantes cerrados: H1, H3, H4, H5, H6 (de 10 hallazgos totales de la revisión independiente)
+- Excepción documentada: **H2** (narrativa de sesión y código en commits distintos, orden cronológico invertido) aceptada por Hugo Cornejo Villena el 19 de julio de 2026, conforme a `docs/WORKFLOW-METHODOLOGY-v2.md` §15; detalle completo en `experiments/EXP-010-evaluation.md` §8. No afecta corrección técnica, pruebas, seguridad ni reversión.
+- Hallazgos no bloqueantes pendientes: H7, H8, H9 (observaciones para VS-02)
+- Lección obligatoria registrada para PILOT-004: la narrativa de sesión y el código correspondiente deben registrarse en el mismo commit y en orden cronológico (recurrencia del mismo tipo de hallazgo que H2 de EXP-007; ver `experiments/EXP-010-evaluation.md` §9).
+- Ensayo de reversión: ejecutado y exitoso — 6 commits revertidos y 6 reaplicados mediante `git revert` exclusivamente, 0 conflictos en 12/12 operaciones, árbol y suite verificados idénticos en ambos extremos (23/21/0/2 tras revertir; 39/37/0/2 tras restaurar), en la rama desechable `pilot-003/exp-010-reversal-test` (conservada, no fusionada)
+- Código o pruebas ejecutables modificados: sí — `app.js`, `index.html`, `styles.css`, `test-runner.js`, sobre la rama `pilot-003/exp-010-priority-base`; `main` no modificado
+- Slice implementada: VS-01 — Prioridad base y compatibilidad (única slice autorizada para EXP-010)
+- Evidencia:
+  - `experiments/EXP-010-TB-14.md`
+  - `experiments/EXP-010-implementation-plan.md`
+  - `experiments/EXP-010-test-plan.md`
+  - `experiments/EXP-010-session-log.md`
+  - `experiments/EXP-010-independent-review.md`
+  - `experiments/EXP-010-reversal-test.md`
+  - `experiments/EXP-010-evaluation.md`
+- Estado final: **cerrado técnicamente, no integrado todavía**. Gates 0 a 5 completados; Gate 6 (pull request revisado y aprobado por Hugo Cornejo Villena; merge a `main`) pendiente de autorización humana, ya sin condiciones adicionales abiertas (H2 resuelto como excepción). PILOT-003 continúa abierto hasta el merge y el cierre formal del piloto.
+- Slices diferidas: VS-02 a VS-06 (edición de prioridad, filtros, coherencia bajo filtros, estados vacíos y regresión integral), según `experiments/EXP-009-vertical-slice-map.md` §11; ninguna quedó implementada en EXP-010.

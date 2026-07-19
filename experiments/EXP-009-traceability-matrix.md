@@ -13,7 +13,7 @@
 | RF-01 | Tarea sin prioridad carga como Media sin escritura automática | RI-01, RI-03 | VS-01 | T010-06, T010-08 | tarea normalizada en memoria; `localStorage` intacto |
 | RF-02 | Creación sin prioridad explícita persiste `medium` | RI-01, RI-02 | VS-01 | T010-01 | objeto persistido con `priority: "medium"` |
 | RF-03 | Prioridad editable en tareas pendientes y completadas | RI-08 | VS-02 | T011-01, T011-02 | prioridad actualizada conservando estado |
-| RF-04 | Prioridad visible mediante texto Baja, Media o Alta | RI-01, RI-02 | VS-01 | T010-11 | texto visible en fila renderizada |
+| RF-04 | Prioridad visible mediante texto Baja, Media o Alta | RI-01, RI-02 | VS-01 | T010-12 | texto visible en fila renderizada |
 | RF-05 | Filtro de prioridad ofrece Todas, Baja, Media y Alta | RI-02 | VS-04 | T013-01 | opciones exactas del selector |
 | RF-06 | Filtro de estado ofrece Todas, Pendientes y Completadas | RI-05 | VS-03 | T012-01 | opciones exactas del selector |
 | RF-07 | Ambos filtros se combinan mediante AND | RI-05, RI-09 | VS-04 | T013-02, T013-03 | solo tareas que cumplen ambas condiciones |
