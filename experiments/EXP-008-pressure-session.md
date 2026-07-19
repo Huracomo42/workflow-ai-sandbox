@@ -166,3 +166,15 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener la edición como borrador temporal y evitar persistencia prematura.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 14 — Rechazo de creación por prioridad inválida
+
+- Fecha: 19 de julio de 2026
+- Decisión: si la prioridad seleccionada al crear una tarea es inválida, la creación será rechazada por completo.
+- Comportamiento:
+  - no se creará la tarea;
+  - no se persistirá información parcial;
+  - se mostrará un mensaje claro indicando el problema de prioridad.
+- Motivo: mantener consistencia atómica entre creación y edición.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
