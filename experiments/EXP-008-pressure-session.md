@@ -223,3 +223,12 @@ Pendiente. No puede cerrarse EXP-008 mientras exista una pregunta bloqueante.
 - Motivo: mantener separados el guardado de datos y la visualización filtrada.
 - Tipo: regla funcional congelable.
 - Autoriza: Hugo Cornejo Villena.
+
+## Decisión funcional 20 — Opciones del filtro de estado
+
+- Fecha: 19 de julio de 2026
+- Decisión: el filtro de estado tendrá únicamente las opciones `Todas`, `Pendientes` y `Completadas`.
+- Restricción: no se incorporarán estados adicionales durante PILOT-003.
+- Motivo: mantener compatibilidad con el modelo actual y evitar ampliar innecesariamente el dominio.
+- Tipo: regla funcional congelable.
+- Autoriza: Hugo Cornejo Villena.
